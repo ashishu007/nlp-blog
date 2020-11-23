@@ -62,7 +62,7 @@
   
       ,"page1": {
           "title": "About Me",
-          "content": "To know more about me, check out my website. &lt;!– This website is powered by fastpages 1. . a blogging platform that natively supports Jupyter notebooks in addition to other formats. –&gt; &#8617; . |",
+          "content": "To know more about me, check out my website. .",
           "url": "https://ashishu007.github.io/nlp-blog/about/",
           "relUrl": "/about/",
           "date": ""
