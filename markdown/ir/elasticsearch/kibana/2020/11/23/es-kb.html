@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Elasticsearch and Kibana for Information Retrieval | NLP-Blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Elasticsearch and Kibana for Information Retrieval" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A minimal example of using markdown with fastpages." />
+<meta property="og:description" content="A minimal example of using markdown with fastpages." />
+<link rel="canonical" href="https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/es-kb.html" />
+<meta property="og:url" content="https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/es-kb.html" />
+<meta property="og:site_name" content="NLP-Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-23T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"A minimal example of using markdown with fastpages.","url":"https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/es-kb.html","@type":"BlogPosting","headline":"Elasticsearch and Kibana for Information Retrieval","dateModified":"2020-11-23T00:00:00-06:00","datePublished":"2020-11-23T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/es-kb.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/nlp-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://ashishu007.github.io/nlp-blog/feed.xml" title="NLP-Blog" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-173216826-1','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/nlp-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/nlp-blog/">NLP-Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/nlp-blog/about/">About Me</a><a class="page-link" href="/nlp-blog/search/">Search</a><a class="page-link" href="/nlp-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Elasticsearch and Kibana for Information Retrieval</h1><p class="page-description">A minimal example of using markdown with fastpages.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-11-23T00:00:00-06:00" itemprop="datePublished">
+        Nov 23, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      10 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#markdown">markdown</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#ir">ir</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#elasticsearch">elasticsearch</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#kibana">kibana</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#elasticsearch-and-kibana-for-information-retrieval">Elasticsearch and Kibana for Information Retrieval</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#objectives">Objectives</a></li>
+<li class="toc-entry toc-h2"><a href="#approach">Approach</a></li>
+<li class="toc-entry toc-h2"><a href="#elasticsearch">Elasticsearch</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#install-and-run-elasticsearch-and-kibana">Install and Run ElasticSearch and Kibana</a></li>
+<li class="toc-entry toc-h3"><a href="#add-individual-documents-to-the-index">Add Individual Documents to the Index</a></li>
+<li class="toc-entry toc-h3"><a href="#indexing-a-set-of-documents-in-elasticsearch">Indexing a Set of Documents in Elasticsearch</a></li>
+<li class="toc-entry toc-h3"><a href="#queries-in-elasticsearch">Queries in Elasticsearch</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#boolean">Boolean</a></li>
+<li class="toc-entry toc-h4"><a href="#ranked-queries-with-bm25">Ranked queries with BM25</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#appendix-analyzers">Appendix-Analyzers</a></li>
+<li class="toc-entry toc-h3"><a href="#appendix-py-script">Appendix-Py-Script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><h1 id="elasticsearch-and-kibana-for-information-retrieval">
+<a class="anchor" href="#elasticsearch-and-kibana-for-information-retrieval" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch and Kibana for Information Retrieval</h1>
+
+<h2 id="objectives">
+<a class="anchor" href="#objectives" aria-hidden="true"><span class="octicon octicon-link"></span></a>Objectives</h2>
+
+<p>The objectives of this lab are:</p>
+<ul>
+  <li>to explore the basic functionality of a state-of-the-art IR system; and</li>
+  <li>to compare the retrieval effectiveness of BM25.</li>
+</ul>
+
+<h2 id="approach">
+<a class="anchor" href="#approach" aria-hidden="true"><span class="octicon octicon-link"></span></a>Approach</h2>
+
+<p>You will install and run Elasticsearch and employ a console available on Kibana to load and search our document collections (Documents and IRDocuments).</p>
+
+<p>To install <strong>Elasticsearch</strong> and <strong>Kibana</strong>, goto <a href="/nlp-blog/_posts/2020-11-23-install-es-kb.md">this page</a>.</p>
+
+<h2 id="elasticsearch">
+<a class="anchor" href="#elasticsearch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch</h2>
+<p>In the previous labs we have used a simple stand-alone retrieval engine. This has been great to allow us to easily try different approaches to indexing. However, it is not suitable for real production applications because it is not optimised to scale for large volume data in a cloud computing, client-server architecture. There are 2 widely used, open-source IR systems that can scale to massive volume applications. These are Apache Solr (<a href="https://lucene.apache.org/solr/">https://lucene.apache.org/solr/</a>) and the more recent ElasticSearch (<a href="https://www.elastic.co">https://www.elastic.co</a>). Both are built in Java, based on an IR engine called Lucene, and provide a server-side IR system that can be accessed via a REST API. ElasticSearch has become the industry standard for new applications.</p>
+
+<p>ElasticSearch (ES) is a distributed, open source search and analytics engine for all types of data, including textual, numerical, geospatial, structured, and unstructured. Its speed and scalability along with the ability to index many types of content mean that it can be used for a wide range of applications. Core to its performance is an inverted index very similar to those we have already seen.</p>
+
+<p>Kibana is a data visualization and management tool for Elasticsearch that provides real-time histograms, line graphs, pie charts, and maps. It also contains a simple console that we will use to interact with the ES API using JSON data format.</p>
+
+<h3 id="install-and-run-elasticsearch-and-kibana">
+<a class="anchor" href="#install-and-run-elasticsearch-and-kibana" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install and Run ElasticSearch and Kibana</h3>
+
+<ol>
+  <li>
+    <p><em>If you navigate to the Maths + Statistics folder in the AllPrograms section of your startup menu, you should find ElasticSearch and Kibana already downloaded and installed.</em></p>
+  </li>
+  <li>
+    <p><em>Click first on the ElasticSearch folder to run the .bat file. You should see a command line interface open up as ElasticSearch starts up and runs in the background on a local server on your desktop.</em></p>
+  </li>
+  <li>
+    <p>Go to <a href="http://localhost:9200/">http://localhost:9200/</a> and you should see something like this:</p>
+  </li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/es_open.jpg" alt="es_open"></p>
+
+<ol>
+  <li>Now select the Kibana folder to run the .bat file. It should now open in the command line window. Point your browser at <a href="http://localhost:5601">http://localhost:5601</a> and you should see something like this:</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/kb_open.jpg" alt="kb_open"></p>
+
+<p>On the top-left corner, click the three parallel lines (<span class="math">≡</span>) to open the menu. Now scroll-down to find the <code class="language-plaintext highlighter-rouge">Dev Tools</code> option under <code class="language-plaintext highlighter-rouge">Management</code> section. Click it to go to the console where we will be writing the queries.</p>
+
+<p>In a production system Elasticsearch would typically run on a cloud server with client side JavaScript applications passing information back and fore in JSON data format to the API made available by Elasticsearch. The Kibana console allows us to simulate sending requests (in the left-hand pane) and receiving answers (in the right-hand pane). This allows us to explore Elasticsearch without building the frontend application</p>
+
+<p>ElasticSearch is open source and can be installed on your own machine. Check out <a href="https://ashishu007.github.io/elasticsearch-kibana/install">this page</a> for information on installing on Windows.</p>
+
+<h3 id="add-individual-documents-to-the-index">
+<a class="anchor" href="#add-individual-documents-to-the-index" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add Individual Documents to the Index</h3>
+
+<p>First ensure that an Elasticsearch instance is running on <a href="http://localhost:9200">http://localhost:9200</a> and a Kibana instance is running on <a href="http://localhost:5601">http://localhost:5601</a>.</p>
+
+<p>As we have a clean Elasticsearch instance initialized and running, the first thing we are going to do is to add documents to an index and then retrieve them. Documents in Elasticsearch are represented in JSON format.</p>
+
+<p>We are adding now to the index named irdocuments (the index name should be in lowercase only) a document having the id 1; since the index does not exist yet, Elasticsearch will automatically create it.</p>
+
+<p>Run the following query in the Kibana console by clicking the green play-button:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST irdocuments/_doc/1
+<span class="o">{</span>
+	<span class="s2">"title"</span>: <span class="s2">"Document 1"</span>,
+	<span class="s2">"content"</span>: <span class="s2">"The cat sat on the mat next to the cat."</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>The response on the right should be something like this (if you copy and paste watch out for quotation mark errors):</p>
+
+<p><img src="/nlp-blog/images/elasticsearch/q1.png" alt="q1"></p>
+
+<p>Verify that the document has been added trying:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET irdocuments/_doc/1
+</code></pre></div></div>
+
+<p>The response should be like this:</p>
+
+<p><img src="/nlp-blog/images/elasticsearch/q2.png" alt="q2"></p>
+
+<p>Add the other 3 documents from IRDocuments and verify they have been added. You can try the following query to retrieve all the documents from the index irdocuments:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET irdocuments/_search
+<span class="o">{</span>
+	<span class="s2">"query"</span>: <span class="o">{</span>
+		<span class="s2">"match_all"</span>: <span class="o">{}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Try:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET irdocuments/_count 
+</code></pre></div></div>
+<p>to count documents in the index.</p>
+
+<p>Let’s delete document 1 and index a new doc with the text “<strong>The white cat sat on the mat next to the black cat.</strong>” Verify the result.</p>
+
+<p>To delete a document from the index, run this query:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DELETE irdocuments/_doc/1
+</code></pre></div></div>
+
+<p>Now you can delete the whole index by running:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DELETE irdocuments
+</code></pre></div></div>
+<p>Verify you have been successful.</p>
+
+<h3 id="indexing-a-set-of-documents-in-elasticsearch">
+<a class="anchor" href="#indexing-a-set-of-documents-in-elasticsearch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Indexing a Set of Documents in Elasticsearch</h3>
+
+<p>Elasticsearch offers a Bulk API that allows us to perform add, delete, update and create operations in bulk for many documents at a time. Since the documents in Elasticsearch are represented in JSON format, we first need to convert our txt files into a predefined JSON format. This has already been done for us for our larger dataset with a python script (see <a href="#appendix-py-script">Appendix-Py-script</a>), the output of which is available as <code class="language-plaintext highlighter-rouge">all_docs.json</code> in lab resources on Moodle.</p>
+
+<p>To get more insight for Bulk API please visit <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html">this link</a>.</p>
+
+<p>Let’s get this data into Elasticsearch. Since the body of these requests can be big, it is recommended to do this via a tool that allows to load the body of a request from a file - for instance, using <strong>curl</strong>. Open a command prompt and navigate to the folder where <code class="language-plaintext highlighter-rouge">all_docs.json</code> file is saved. Run the following command:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-H</span> <span class="s2">"Content-Type: application/x-ndjson"</span> <span class="nt">-XPOST</span> <span class="s2">"localhost:9200/documents/_bulk?pretty"</span> <span class="nt">--data-binary</span> @all_docs.json
+</code></pre></div></div>
+
+<p>This command will index all these documents to an index named <strong>documents</strong>. Be patient, it can take a while to upload the json. Verify the indexing by running the following query:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET irdocuments/_search
+<span class="o">{</span>
+	<span class="s2">"query"</span>: <span class="o">{</span>
+		<span class="s2">"match_all"</span>: <span class="o">{}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Compare the result here with the result you got previous time running this query (for individual documents). You’ll only get top 10 results from this query.</p>
+
+<p><img src="/nlp-blog/images/elasticsearch/doc_q1.png" alt="doc_q1"></p>
+
+<h3 id="queries-in-elasticsearch">
+<a class="anchor" href="#queries-in-elasticsearch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Queries in Elasticsearch</h3>
+
+<h4 id="boolean">
+<a class="anchor" href="#boolean" aria-hidden="true"><span class="octicon octicon-link"></span></a>Boolean</h4>
+
+<p>Let’s start with Boolean queries. In the boolean query, there are four kinds of occurrences: must, should, must_not and filter. must mimics the boolean “<strong>AND</strong>”. For example, if we are searching for documents with “<strong>case-base</strong>” in content and with “<strong>deep learning</strong>” in title, try the bool DSL query:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET documents/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span> : <span class="o">{</span>
+    <span class="s2">"bool"</span> : <span class="o">{</span>
+      <span class="s2">"must"</span>: <span class="o">[{</span>
+          <span class="s2">"match"</span>: <span class="o">{</span>
+              <span class="s2">"content"</span>: <span class="s2">"case-based"</span>
+          <span class="o">}</span>
+      <span class="o">}</span>, <span class="o">{</span>
+          <span class="s2">"match"</span>: <span class="o">{</span>
+              <span class="s2">"title"</span>: <span class="s2">"deep learning"</span>
+          <span class="o">}</span>
+      <span class="o">}]</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Try describing this query in Boolean Logic.</p>
+
+<p>The functionality of should somewhat corresponds to the Boolean “<strong>OR</strong>”. Let’s look at an example, assume you want to search for either “<strong>NLP</strong>” or “<strong>deep learning</strong>” in the title, and if either of the criteria matches the document should be returned with the result. The query might look like:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET documents/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span> : <span class="o">{</span>
+    <span class="s2">"bool"</span> : <span class="o">{</span>
+      <span class="s2">"should"</span>: <span class="o">[{</span>
+          <span class="s2">"match"</span>: <span class="o">{</span>
+              <span class="s2">"title"</span>: <span class="s2">"deep learning"</span>
+          <span class="o">}</span>
+      <span class="o">}</span>, <span class="o">{</span>
+          <span class="s2">"match"</span>: <span class="o">{</span>
+              <span class="s2">"title"</span>: <span class="s2">"nlp"</span>
+          <span class="o">}</span>
+      <span class="o">}]</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Again try describing this query in Boolean Logic.</p>
+
+<p>Try some queries using <em>should</em> and filter. Note <em>filter</em> can be used effectively with numeric data but is also quite similar to <em>must</em>, in that the term has to appear in the document; however, they do not contribute to the score.</p>
+
+<p>Basic information on search is available at <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-search.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-search.html</a></p>
+
+<h4 id="ranked-queries-with-bm25">
+<a class="anchor" href="#ranked-queries-with-bm25" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ranked queries with BM25</h4>
+
+<p>It is easy to perform ranked queries. The scores are based on the <strong>BM25 algorithm</strong> by default using the standard analyser (however, you can change to alternative models by setting up a custom analyser, see <a href="#appendix-analyzers">Appendix</a> for more details).</p>
+
+<p>For example, a ranked query for documents about “<strong>deep learning</strong>” can be written as:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET documents/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span><span class="s2">"match"</span>: <span class="o">{</span><span class="s2">"content"</span>: <span class="s2">"deep learning"</span><span class="o">}}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Note the documents are ranked by score:</p>
+<ul>
+  <li>Try this query but replace “<strong>match</strong>” with “<strong>match_phrase</strong>”. Compare the results.</li>
+  <li>Now try one of the queries from the completed AnalysisHandout sheet from the coursework. Compare the results from tf, idf, and tf*idf with those obtained here.</li>
+</ul>
+
+<p>We have just touched the surface of the functionality available in ElasticSearch today. You will find more detailed information about Elasticsearch at <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.4/index.html">this link</a>.</p>
+
+<h3 id="appendix-analyzers">
+<a class="anchor" href="#appendix-analyzers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Appendix-Analyzers</h3>
+
+<p>You can add different types of analyzers in your index in Elasticsearch. For example, applying a stop word removal on your index.</p>
+
+<p>To define an analyser in an index, we need to first define the mappings here. For this, run the following command on Kibana console:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT documents/
+<span class="o">{</span>
+ <span class="s2">"settings"</span>: <span class="o">{</span>
+   <span class="s2">"analysis"</span>: <span class="o">{</span>
+     <span class="s2">"analyzer"</span>: <span class="o">{</span>
+       <span class="s2">"my_analyzer"</span>: <span class="o">{</span>
+         <span class="s2">"type"</span>:       <span class="s2">"stop"</span>,
+         <span class="s2">"stopwords"</span>:  <span class="s2">"_english_"</span>
+       <span class="o">}</span>
+     <span class="o">}</span>
+   <span class="o">}</span>
+ <span class="o">}</span>,
+ <span class="s2">"mappings"</span>: <span class="o">{</span>
+   <span class="s2">"properties"</span>: <span class="o">{</span>
+     <span class="s2">"title"</span>:    <span class="o">{</span> <span class="s2">"type"</span>: <span class="s2">"text"</span> <span class="o">}</span>,
+     <span class="s2">"content"</span>: <span class="o">{</span> <span class="s2">"type"</span>: <span class="s2">"text"</span>, <span class="s2">"analyzer"</span>: <span class="s2">"my_analyzer"</span>
+     <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Make sure there is no other existing index with name <strong><em>documnets</em></strong>. Now let’s add some data to the index <strong><em>documents</em></strong>. Open a command prompt, navigate to the folder where the JSON file name <strong><em>all_docs.json</em></strong> (from indexing example) is saved. Run the following command to add the JSON to our index.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-H</span> <span class="s2">"Content-Type: application/x-ndjson"</span> <span class="nt">-XPOST</span> <span class="s2">"localhost:9200/documents/_bulk?pretty"</span> <span class="nt">--data-binary</span> @all_docs.json
+</code></pre></div></div>
+
+<p>Go to Kibana console and run following command to verify the indexing:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET documents/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span>
+    <span class="s2">"match_all"</span>: <span class="o">{}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>You should see the indexed files here.</p>
+
+<p>Now to verify the stop-word removal from indexing run the following command:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /documents/_search
+<span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span> 
+    <span class="s2">"match"</span>: <span class="o">{</span> 
+      <span class="s2">"content"</span>: <span class="s2">"the"</span> 
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>You should see a result with 0 hits, because word “the” is not indexed here.</p>
+
+<p>You can also customize the analyzers according to your use. Let’s say you want to apply an html filter as an analyser. You would need to create new mapping on different index. Changing the mapping of an existing field could invalidate data that’s already indexed. If you need to change the mapping of a field, create a new index with the correct mappings and re-index your data into that index.</p>
+
+<p>Let’s make a different index named irdocuments. Run the following command:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT irdocuments/
+<span class="o">{</span>
+ <span class="s2">"settings"</span>: <span class="o">{</span>
+   <span class="s2">"analysis"</span>: <span class="o">{</span>
+     <span class="s2">"analyzer"</span>: <span class="o">{</span>
+       <span class="s2">"blogs_analyzer"</span>: <span class="o">{</span>
+         <span class="s2">"type"</span>: <span class="s2">"custom"</span>,
+         <span class="s2">"tokenizer"</span>: <span class="s2">"standard"</span>,
+         <span class="s2">"stopwords"</span>: <span class="s2">"_english_"</span>,
+         <span class="s2">"char_filter"</span>: <span class="s2">"html_strip"</span>,
+         <span class="s2">"filter"</span>: <span class="o">[</span>
+	    <span class="s2">"stop"</span>,
+            <span class="s2">"lowercase"</span>,
+            <span class="s2">"asciifolding"</span>
+         <span class="o">]</span>
+       <span class="o">}</span>
+     <span class="o">}</span>
+   <span class="o">}</span>
+ <span class="o">}</span>,
+ <span class="s2">"mappings"</span>: <span class="o">{</span>
+   <span class="s2">"properties"</span>: <span class="o">{</span>
+     <span class="s2">"title"</span>:    <span class="o">{</span> <span class="s2">"type"</span>: <span class="s2">"text"</span> <span class="o">}</span>,
+     <span class="s2">"content"</span>: <span class="o">{</span> <span class="s2">"type"</span>: <span class="s2">"text"</span>, <span class="s2">"analyzer"</span>: <span class="s2">"blogs_analyzer"</span> <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Let’s run an example query to verify our analyser:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST irdocuments/_analyze
+<span class="o">{</span>
+  <span class="s2">"analyzer"</span>: <span class="s2">"blogs_analyzer"</span>, 
+  <span class="s2">"text"</span>: <span class="s2">"is this the &lt;b&gt;déjà vu&lt;/b&gt;?."</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>The result should show only two words: [deja, vu]</p>
+
+<p><img src="/nlp-blog/images/elasticsearch/app.png" alt="app"></p>
+
+<h3 id="appendix-py-script">
+<a class="anchor" href="#appendix-py-script" aria-hidden="true"><span class="octicon octicon-link"></span></a>Appendix-Py-Script</h3>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span><span class="p">,</span> <span class="n">os</span><span class="p">,</span> <span class="n">re</span>
+
+<span class="n">txt_files</span> <span class="o">=</span> <span class="s">"C:</span><span class="se">\\</span><span class="s">Users</span><span class="se">\\</span><span class="s">User</span><span class="se">\\</span><span class="s">Downloads</span><span class="se">\\</span><span class="s">CourseworkResourses</span><span class="se">\\</span><span class="s">CourseworkResourses</span><span class="se">\\</span><span class="s">Documents</span><span class="se">\\</span><span class="s">"</span>
+
+<span class="n">ctr</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">j</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">txt</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">txt_files</span><span class="p">):</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">ctr</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">txt_files</span> <span class="o">+</span> <span class="n">txt</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
+    
+    <span class="n">l</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="p">.</span><span class="n">isspace</span><span class="p">(),</span> <span class="n">l</span><span class="p">))</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">tt</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">strip</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+
+    <span class="n">s1</span> <span class="o">=</span> <span class="s">"{</span><span class="se">\"</span><span class="s">index</span><span class="se">\"</span><span class="s">:{</span><span class="se">\"</span><span class="s">_id</span><span class="se">\"</span><span class="s">:"</span> <span class="o">+</span> <span class="s">"</span><span class="se">\"</span><span class="s">"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ctr</span><span class="p">)</span> <span class="o">+</span> <span class="s">"</span><span class="se">\"</span><span class="s">"</span> <span class="o">+</span>  <span class="s">"}}"</span>
+    
+    <span class="n">ctr</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">"#"</span><span class="p">:</span>
+            <span class="n">ii</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'"'</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+            <span class="n">iii</span> <span class="o">=</span> <span class="n">ii</span><span class="p">.</span><span class="n">strip</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">iii</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'#'</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+            <span class="n">s2</span> <span class="o">=</span> <span class="s">"{</span><span class="se">\"</span><span class="s">title</span><span class="se">\"</span><span class="s">:</span><span class="se">\"</span><span class="s">"</span> <span class="o">+</span> <span class="n">tt</span> <span class="o">+</span> <span class="s">"</span><span class="se">\"</span><span class="s">, </span><span class="se">\"</span><span class="s">content</span><span class="se">\"</span><span class="s">:"</span> <span class="o">+</span> <span class="s">"</span><span class="se">\"</span><span class="s">"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">+</span> <span class="s">"</span><span class="se">\"</span><span class="s">"</span> <span class="o">+</span> <span class="s">"}"</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"all_docs.json"</span><span class="p">,</span> <span class="s">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">the_file</span><span class="p">:</span>
+        <span class="n">the_file</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">s1</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">the_file</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">s2</span> <span class="o">+</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/es-kb.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/nlp-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/nlp-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/nlp-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Some simple stuff about NLP.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/ashishu007" title="ashishu007"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/ashishu007_" title="ashishu007_"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

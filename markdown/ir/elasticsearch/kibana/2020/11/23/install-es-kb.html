@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Installing Elasticsearch and Kibana | NLP-Blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Installing Elasticsearch and Kibana" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A minimal example of using markdown with fastpages." />
+<meta property="og:description" content="A minimal example of using markdown with fastpages." />
+<link rel="canonical" href="https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/install-es-kb.html" />
+<meta property="og:url" content="https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/install-es-kb.html" />
+<meta property="og:site_name" content="NLP-Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-23T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"A minimal example of using markdown with fastpages.","url":"https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/install-es-kb.html","@type":"BlogPosting","headline":"Installing Elasticsearch and Kibana","dateModified":"2020-11-23T00:00:00-06:00","datePublished":"2020-11-23T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ashishu007.github.io/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/install-es-kb.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/nlp-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://ashishu007.github.io/nlp-blog/feed.xml" title="NLP-Blog" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-173216826-1','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/nlp-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/nlp-blog/">NLP-Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/nlp-blog/about/">About Me</a><a class="page-link" href="/nlp-blog/search/">Search</a><a class="page-link" href="/nlp-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Installing Elasticsearch and Kibana</h1><p class="page-description">A minimal example of using markdown with fastpages.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-11-23T00:00:00-06:00" itemprop="datePublished">
+        Nov 23, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#markdown">markdown</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#ir">ir</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#elasticsearch">elasticsearch</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#kibana">kibana</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#install-elasticsearch-and-kibana-on-windows">Install Elasticsearch and Kibana on Windows</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#download-and-unzip-packages">Download and Unzip Packages</a></li>
+<li class="toc-entry toc-h3"><a href="#verify-the-java_home-path">Verify the JAVA_HOME path</a></li>
+<li class="toc-entry toc-h3"><a href="#running-elasticsearch">Running Elasticsearch</a></li>
+<li class="toc-entry toc-h3"><a href="#running-kibana">Running Kibana</a></li>
+<li class="toc-entry toc-h3"><a href="#experiments">Experiments</a></li>
+</ul>
+</li>
+</ul><h1 id="install-elasticsearch-and-kibana-on-windows">
+<a class="anchor" href="#install-elasticsearch-and-kibana-on-windows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Elasticsearch and Kibana on Windows</h1>
+
+<p>Since both ElasticSearch and Kibana is written in Java, its mandatory to have the current JDK installed. If not, go to <a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html">this page</a> and install the latest JDK.</p>
+
+<h3 id="download-and-unzip-packages">
+<a class="anchor" href="#download-and-unzip-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download and Unzip Packages</h3>
+
+<ul>
+  <li>Download the <strong>Windows</strong> <code class="language-plaintext highlighter-rouge">.zip</code> packages for <strong>elasticsearch</strong> and <strong>kibana</strong> from the following links:
+    <ul>
+      <li>
+<strong>Elasticseacrh</strong>: <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a>
+</li>
+      <li>
+<strong>Kibana</strong>: <a href="https://www.elastic.co/downloads/kibana">https://www.elastic.co/downloads/kibana</a>
+</li>
+    </ul>
+  </li>
+  <li>After downloading, unzip the files to some location. Let’s say
+    <ul>
+      <li>
+<strong>Elasticseacrh</strong>: <code class="language-plaintext highlighter-rouge">C:\Users\ashis\Downloads\elasticsearch-7.9.2-windows-x86_64</code>
+</li>
+      <li>
+<strong>Kibana</strong>: <code class="language-plaintext highlighter-rouge">C:\Users\ashis\Downloads\kibana-7.9.2-windows-x86_64</code>
+</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="verify-the-java_home-path">
+<a class="anchor" href="#verify-the-java_home-path" aria-hidden="true"><span class="octicon octicon-link"></span></a>Verify the JAVA_HOME path</h3>
+
+<p>Since both tools need JDK to run, we need to verify if the <code class="language-plaintext highlighter-rouge">JAVA_HOME</code> path is set correctly. For this follow these steps:</p>
+
+<ol>
+  <li>Under the search bar type <code class="language-plaintext highlighter-rouge">env</code> and click the <code class="language-plaintext highlighter-rouge">Edit the System Environment Variables</code>.</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/env_var1.jpg" alt="env_var"></p>
+
+<ol>
+  <li>Then click the <code class="language-plaintext highlighter-rouge">Environment Variables</code> option.</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/env_var2.jpg" alt="env_var1"></p>
+
+<ol>
+  <li>Now, check if the value for <code class="language-plaintext highlighter-rouge">JAVA_HOME</code> is set to something like this: <code class="language-plaintext highlighter-rouge">C:\Program Files\java\jdk*</code>. The one highlighted in blue is the path for <code class="language-plaintext highlighter-rouge">JAVA_HOME</code>:</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/java_home1.jpg" alt="java_home"></p>
+
+<ol>
+  <li>If <code class="language-plaintext highlighter-rouge">JAVA_HOME</code> isn’t setup, follow these setps:
+    <ul>
+      <li>Copy the path for your JDK, it should be something like: <code class="language-plaintext highlighter-rouge">C:\Program Files\Java\jdk1.8.0_261</code> (depending on the version of Java installed in your system)</li>
+      <li>In the <code class="language-plaintext highlighter-rouge">Environment Variables</code> window, click <code class="language-plaintext highlighter-rouge">New</code> for <code class="language-plaintext highlighter-rouge">System Variables</code>
+</li>
+      <li>In the field <code class="language-plaintext highlighter-rouge">Variable name</code> write <code class="language-plaintext highlighter-rouge">JAVA_HOME</code>
+</li>
+      <li>In the field <code class="language-plaintext highlighter-rouge">Variable value</code> paste the JDK path that you’ve copied</li>
+    </ul>
+  </li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/java_home2.jpg" alt="jh1"></p>
+
+<h3 id="running-elasticsearch">
+<a class="anchor" href="#running-elasticsearch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Elasticsearch</h3>
+
+<ol>
+  <li>
+    <p>Open the <strong>command-prompt</strong> (type <code class="language-plaintext highlighter-rouge">cmd</code> in the search bar and click enter) and navigate to the folder where you unzipped <code class="language-plaintext highlighter-rouge">elasticsearch</code>.</p>
+  </li>
+  <li>
+    <p>Run <code class="language-plaintext highlighter-rouge">bin\elasticsearch.bat</code></p>
+  </li>
+</ol>
+
+<p>Elasticsearch will start on that cmd.</p>
+
+<p><strong>Note</strong>: If you wish to explicitly define the cluster and node names, please use the following command:</p>
+
+<p><code class="language-plaintext highlighter-rouge">bin\elasticsearch.bat -Ecluster.name=my_cluster -Enode.name=my_node</code></p>
+
+<ol>
+  <li>When the <code class="language-plaintext highlighter-rouge">cmd</code> turns to this:</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/es_cmd.jpg" alt="es"></p>
+
+<ol>
+  <li>Open <a href="http://localhost:9200/">http://localhost:9200/</a> in the browser. You should see something like this:</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/es_open.jpg" alt="es1"></p>
+
+<h3 id="running-kibana">
+<a class="anchor" href="#running-kibana" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Kibana</h3>
+
+<ol>
+  <li>
+    <p>Open another <strong>command-prompt</strong> and navigate to the folder where you unzipped <code class="language-plaintext highlighter-rouge">kibana</code>.</p>
+  </li>
+  <li>
+    <p>Run <code class="language-plaintext highlighter-rouge">bin\kibana.bat</code></p>
+  </li>
+  <li>
+    <p>When <code class="language-plaintext highlighter-rouge">cmd</code> turns to this:</p>
+  </li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/kb_cmd.jpg" alt="kb"></p>
+
+<ol>
+  <li>Open <a href="http://localhost:5601/">http://localhost:5601/</a> in the browser. You should see something like this:</li>
+</ol>
+
+<p><img src="/nlp-blog/images/elasticsearch/kb_open.jpg" alt="kb1"></p>
+
+<h3 id="experiments">
+<a class="anchor" href="#experiments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experiments</h3>
+
+<p>Now everything is installed, goto this page for <a href="/nlp-blog/_posts/2020-11-23-es-kb.md">experimentation</a>.</p>
+
+  </div><a class="u-url" href="/nlp-blog/markdown/ir/elasticsearch/kibana/2020/11/23/install-es-kb.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/nlp-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/nlp-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/nlp-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Some simple stuff about NLP.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/ashishu007" title="ashishu007"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/ashishu007_" title="ashishu007_"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
