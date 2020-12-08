@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deep Learning in Natural Language Processing | NLP-Blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Deep Learning in Natural Language Processing" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Quick overview of Deep Learning in NLP." />
+<meta property="og:description" content="Quick overview of Deep Learning in NLP." />
+<link rel="canonical" href="https://ashishu007.github.io/nlp-blog/blog/nlp/transfer%20learning/deep%20learning/transformers/lstms/rnns/2020/07/21/DL-in-NLP.html" />
+<meta property="og:url" content="https://ashishu007.github.io/nlp-blog/blog/nlp/transfer%20learning/deep%20learning/transformers/lstms/rnns/2020/07/21/DL-in-NLP.html" />
+<meta property="og:site_name" content="NLP-Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T00:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"https://ashishu007.github.io/nlp-blog/blog/nlp/transfer%20learning/deep%20learning/transformers/lstms/rnns/2020/07/21/DL-in-NLP.html","@type":"BlogPosting","headline":"Deep Learning in Natural Language Processing","dateModified":"2020-07-21T00:00:00-05:00","datePublished":"2020-07-21T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ashishu007.github.io/nlp-blog/blog/nlp/transfer%20learning/deep%20learning/transformers/lstms/rnns/2020/07/21/DL-in-NLP.html"},"description":"Quick overview of Deep Learning in NLP.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/nlp-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://ashishu007.github.io/nlp-blog/feed.xml" title="NLP-Blog" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-173216826-1','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/nlp-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/nlp-blog/">NLP-Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/nlp-blog/about/">About Me</a><a class="page-link" href="/nlp-blog/search/">Search</a><a class="page-link" href="/nlp-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Deep Learning in Natural Language Processing</h1><p class="page-description">Quick overview of Deep Learning in NLP.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-07-21T00:00:00-05:00" itemprop="datePublished">
+        Jul 21, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      24 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#Blog">Blog</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#NLP">NLP</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#Transfer Learning">Transfer Learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#Deep Learning">Deep Learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#Transformers">Transformers</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#LSTMs">LSTMs</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#RNNs">RNNs</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#deep-learning-in-natural-language-processing">Deep Learning in Natural Language Processing</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#artificial-intelligence---looking-back">Artificial Intelligence - Looking Back</a></li>
+<li class="toc-entry toc-h2"><a href="#word-embeddings">Word Embeddings</a></li>
+<li class="toc-entry toc-h2"><a href="#sequence-learning">Sequence Learning</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#vanilla-seq2seq-model">Vanilla seq2seq Model</a></li>
+<li class="toc-entry toc-h3"><a href="#seq2seq-with-attention">seq2seq with Attention</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#learning-methods">Learning Methods</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#recurrent-neural-networks">Recurrent Neural Networks</a></li>
+<li class="toc-entry toc-h3"><a href="#long-short-term-memory-networks">Long Short-Term Memory Networks</a></li>
+<li class="toc-entry toc-h3"><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li>
+<li class="toc-entry toc-h3"><a href="#transformers">Transformers</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#language-models">Language Models</a></li>
+<li class="toc-entry toc-h2"><a href="#transfer-learning">Transfer Learning</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#embeddings-learned-from-language-models">Embeddings Learned from Language Models</a></li>
+<li class="toc-entry toc-h3"><a href="#universal-language-model-fine-tuning">Universal Language Model Fine-Tuning</a></li>
+<li class="toc-entry toc-h3"><a href="#generative-pre-training">Generative Pre-Training</a></li>
+<li class="toc-entry toc-h3"><a href="#bidirectional-encoder-representation-from-transformers">Bidirectional Encoder Representation from Transformers</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#further-steps">Further Steps</a></li>
+<li class="toc-entry toc-h2"><a href="#acknowledgement">Acknowledgement</a></li>
+<li class="toc-entry toc-h2"><a href="#references">References</a></li>
+</ul>
+</li>
+</ul><h1 id="deep-learning-in-natural-language-processing">
+<a class="anchor" href="#deep-learning-in-natural-language-processing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deep Learning in Natural Language Processing</h1>
+
+<p>I read many papers about Deep Learning (DL) in Natural Language Processing (NLP) in the starting months of my PhD. This blog is a summary of that reading, where I try to sequentially discuss the development of DL methods applied to various NLP tasks.</p>
+
+<!--more-->
+
+<p>A little heads-up about the blog. This blog is <strong>not</strong> an in-depth analysis of DL methods applied to NLP tasks, instead, I have tried to provide a <strong>quick overview</strong> of the main development of DL methods for NLP. The goal of this post is to provide the reader with a direction for starting with DL in NLP. I’ll try to showcase the field’s evolution in a previous couple of years. Hopefully, by the end of this blog, if you are a newcomer to the field, you’ll at least have the understanding of technical terms of DL in NLP.</p>
+
+<p>So, without further ado, <strong><em>let’s start</em></strong>.
+&lt;!– 
+<strong>Table of Contents</strong></p>
+
+<ul>
+  <li><a href="#artificial-intelligence---looking-back">Artificial Intelligence - Looking Back</a></li>
+  <li><a href="#word-embeddings">Word Embeddings</a></li>
+  <li>
+<a href="#sequence-learning">Sequence Learning</a>
+    <ul>
+      <li><a href="#vanilla-seq2seq-model">Vanilla seq2seq Model</a></li>
+      <li><a href="#seq2seq-with-attention">seq2seq with Attention</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#learning-methods">Learning Methods</a>
+    <ul>
+      <li><a href="#recurrent-neural-networks">Recurrent Neural Networks</a></li>
+      <li><a href="#long-short-term-memory-networks">Long Short-Term Memory Networks</a></li>
+      <li><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li>
+      <li><a href="#transformers">Transformers</a></li>
+    </ul>
+  </li>
+  <li><a href="#language-models">Language Models</a></li>
+  <li>
+<a href="#transfer-learning">Transfer Learning</a>
+    <ul>
+      <li><a href="#embeddings-learned-from-language-models">Embeddings Learned from Language Models</a></li>
+      <li><a href="#universal-language-model-fine-tuning">Universal Language Model Fine-Tuning</a></li>
+      <li><a href="#generative-pre-training">Generative Pre-Training</a></li>
+      <li><a href="#bidirectional-encoder-representation-from-transformers">Bidirectional Encoder Representation from Transformers</a></li>
+    </ul>
+  </li>
+  <li><a href="#further-steps">Further Steps</a></li>
+  <li>
+    <p><a href="#acknowledgement">Acknowledgement</a></p>
+  </li>
+  <li><a href="#references">References</a></li>
+</ul>
+
+<p><small><i><a href="http://ecotrust-canada.github.io/markdown-toc/">Table of contents generated with markdown-toc</a></i></small> –&gt;</p>
+
+<h2 id="artificial-intelligence---looking-back">
+<a class="anchor" href="#artificial-intelligence---looking-back" aria-hidden="true"><span class="octicon octicon-link"></span></a>Artificial Intelligence - Looking Back</h2>
+
+<p>First, a quick recap of the developments in Artificial Intelligence (AI) research. In the early days of AI, before the 90s, experts used to design task specific <strong>rules</strong> for different real-world problems. However, they would often fail when unseen or unexpected data/situation arrived.</p>
+
+<p>In the last 20 years, around the late 90s or so, statistical approaches to these problems started gaining traction. Now, instead of writing rules, human effort was involved in extracting different <strong>features</strong> that would tell a mathematical model to learn the relation between input and output space. Statistical models are capable of learning the rules themselves, by looking at the labelled examples. These approaches can be considered as the early days of machine learning. However, they still require domain expertise to engineer domain specific features.</p>
+
+<p>Around 2010, when a huge amount of data and powerful computers started coming out, a subset of machine learning, called deep learning, using neural networks became a model of choice for learning from data. These models are capable of learning the multi-level hierarchy of features and thus do not require any explicit need for feature engineering. Human energy is now focused on determining the most suitable <strong>architecture</strong> and training setting for each task.</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/ss.png" alt="Sesame Street" width="850px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+
+<div style="text-align: center;"><b>Sesame Street &amp; Co.: Popular naming convention nowadays in NLP <a href="http://jalammar.github.io/illustrated-bert/">(source)</a></b></div>
+
+<p>From next sections, I’ll talk about NLP.</p>
+
+<!-- I'll also **not** discuss any **specific NLP task**, because the aim of this blog is to showcase that how the field has evolved in the previous coupe of years. -->
+
+<!-- I try to provide an higher level overview of main concepts of DL & NLP, and then, point towards other resources that I used to get the deeper understanding of that concept.  -->
+
+<!-- - [Word Embeddings](#heading)
+- [Language Models](#heading-1)
+- [Recurrent Neural Networks](#heading-2)
+- [Long-Short Term Memory Networks](#heading-3)
+- [Convolutional Neural Networks](#heading-4)
+- [Sequence-to-Sequence Models](#heading-5)
+    - [Attention](#sub-heading)
+- [Contextual Word Embeddings](#heading-6)
+    - [ELMo](#sub-heading-1)
+- [Transfer Learning](#heading-7)
+    - [ULMFiT](#sub-heading-2)
+- [Transformers](#heading-8)
+    - [GPT](#sub-heading-3)
+    - [BERT](#sub-heading-4) -->
+
+<!-- With this, let's start the discussion from next section now. -->
+
+<!-- The main research papers are also cited throughut the blog, so, it'll be easy for the reader to follow-up that paper. -->
+
+<!-- **The reason behind this blog** - when I started my PhD, I was very confused by the broadness of NLP. I knew I wanted to do something in NLP and DL, but wasn't sure what. I started reading papers, blogs, course materials related to NLP (not just DL but other knowledge based methods as well). For my Postgraduate Certification module, I had to submit a research plan just after four months of the start of my PhD. The reviews that I got were focused on mainly one thing - the literature review was not critical and felt like a tutorial. And that was absolutely right, because, at that point, even though I had read alot about NLP, I had no idea that where to apply those things. So, I wasn't able to critique the works properly. But then I thought why not to share the literature review as a tutorial only, this can benifit many new-comers of NLP. That's how I wrote this blog. -->
+
+<!-- So, that's why I wrote this blog. This is a significant part of my literature review that I submitted to the university. Please have a read and do comment your opinion on the quality of my writing and this blog itself.  -->
+
+<!-- Initially, Deep Learning (DL) outperformed a lot of state-of-the-art (SOTA) algorithms in vision tasks and established itself as the benchmark solutions [[7]](#myfootnote7) [[17]](#myfootnote17). During the past few years with the advancement in computing powers and the availability of large datasets, the **Deep Learning Tsunami** [[12]](#myfootnote12) has taken over NLP as well.  -->
+
+<!-- ### Introduction -->
+<!-- Representation Learning or in common words Deep Learning (DL) can be considered as a subset of machine learning but has gained attention as a different field due to its success in various vision, text and speech tasks. The difference about DL that makes it perform better on various complex problems is that it doesn't require domain expertise to identify the features to represent a problem or case from previous experience. Instead it automatically learns the features during training process using a large set of training data on various iterations.  -->
+
+<h2 id="word-embeddings">
+<a class="anchor" href="#word-embeddings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word Embeddings</h2>
+<p>The first thing to start should be the representation of textual data in numerical format. Word Embeddings are used to represent words in a multi-dimensional vector form. A word <span class="math"><b>w<sub>i</sub></b></span> in vocabulary <strong>V</strong> is represented in the form of a vector of <strong>n</strong> dimensions. These vectors are generated by unsupervised training on a large corpus of words to gain the semantic similarities between the words. Algorithms like word2vec <a href="myfootnote1">[1]</a> and GloVe <a href="myfootnote2">[2]</a> are used to train these word embeddings. These word embeddings are generally pre-trained and made publicly available to be directly used in the deep learning models.</p>
+
+<!-- ![Figure 1: LSTM](/assets/nlp-dl/lstm.png){:width="500px" style="display:block;margin-left:auto;margin-right:auto;"} -->
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/glove_vecs.png" alt="Word Embeddings" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>2-D visualisation of GloVe vectors <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture02-wordvecs2.pdf">(source)</a></b></div>
+
+<p>These distributed representations of words give a certain amount of semantic understanding of the words in a high dimensional vector space. For example, the distance between words <strong><em>king</em></strong> and <strong><em>queen</em></strong> will be similar to the distance between <strong><em>boy</em></strong> and <strong><em>girl</em></strong>. In this contrast, the below equation fits perfectly.</p>
+
+<!-- % A visualization of these word embeddings in low dimension is shown in \cref{fig:glove_ex} \footnote{taken from \url{http://web.stanford.edu/class/cs224n/}}. -->
+
+<div style="text-align: center;">
+<span class="math"><b>boy - girl + king = queen</b></span>
+</div>
+
+<p>These representations have a drawback that they fail to take the context of a word into account. For example, the word <strong><em>‘Scotland’</em></strong> will have a different meaning in the sentence <strong><em>‘Scotland is one of the best places to live on earth’</em></strong> than in the sentence <strong><em>‘Royal Bank of Scotland is one of the top banking firms in the UK’</em></strong>. The GloVe or word2vec word embeddings will fail to differentiate the two meanings of <strong><em>Scotland</em></strong> and will assign the same vector in both the cases. These drawbacks are tackled by a new concept of contextual word embeddings discussed in a <a href="#embeddings-learned-from-language-models">section below</a>.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>
+<a href="http://web.stanford.edu/class/cs224u/materials/cs224u-2020-vsm-handout.pdf">This lecture from CS224u</a>.</li>
+      <li>
+<a href="https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf">Word2Vec Paper</a>.</li>
+      <li>
+<a href="https://nlp.stanford.edu/pubs/glove.pdf">GloVe Paper</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="sequence-learning">
+<a class="anchor" href="#sequence-learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sequence Learning</h2>
+
+<p>Most NLP tasks require sequential output instead of a single output label, unlike classification or regression, for example, Machine Translation, Question-Answering, or Named-Entity Recognition. These systems take a sequence of input and process it to produce yet another sequence for output. The goal is to take a sequence <span class="math"><b>x<sub>1</sub>, x<sub>2</sub>, …, x<sub>n</sub></b></span> as input and map it to another sequence <span class="math"><b>y<sub>1</sub>, y<sub>2</sub>, …, y<sub>m</sub></b></span> as output.</p>
+
+<h3 id="vanilla-seq2seq-model">
+<a class="anchor" href="#vanilla-seq2seq-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vanilla seq2seq Model</h3>
+<p>The architecture used to deal with this kind of problems is known as <strong>Sequence-to-Sequence</strong> model or in common terms, <strong>seq2seq</strong> model. It is a combination of encoders and decoders which works in a sequential manner, where, an encoder is a neural network that generates a context vector from the input sequence, and decoder, another neural network taking context vector as input, generates the output sequence.</p>
+
+<p>The encoder takes an input <strong>X</strong> and maps it to fixed-size context vector <strong>Z</strong> using the formula given below:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>Z = σ(Wx + b)</b></span>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:enc}
+        Z = \sigma(WX + b)
+\end{equation} -->
+
+<p>where <span class="math"><b>σ</b></span> is an <strong>activation function</strong>. A decoder then maps the context vector <strong>Z</strong> to a new form of input <span class="math"><b>X’</b></span> as shown in the equation below:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>X' = σ'(W'Z + b')</b></span>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:dec}
+        X^{\prime} = \sigma^{\prime}(W^{\prime}Z + b^{\prime})
+\end{equation} -->
+
+<p>where <span class="math"><b>σ’</b></span> is another <strong>activation function</strong>. The loss is calculated as the <strong>squared error</strong> between original and reconstructed input as shown in equation below:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>L = || X - X' ||<sup>2</sup></b></span>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:seq2seq_loss}
+        L = ||X-X^{\prime}||^{2}
+\end{equation} -->
+
+<p>An illustrated diagram of seq2seq model performing machine translation is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/encoder.png" alt="Encoder" width="250px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>Encoder</b></div>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/decoder.png" alt="Decoder" width="250px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>Decoder</b></div>
+
+<div style="text-align: center;"><b>An Encoder-Decoder seq2seq model <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/readings/cs224n-2019-notes06-NMT_seq2seq_attention.pdf">(source)</a></b></div>
+
+<!-- \begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{images/encoder.png}
+         \caption{Encoder}
+         \label{fig:encoder}
+     \end{subfigure}
+    %  \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{images/decoder.png}
+         \caption{Decoder}
+         \label{fig:decoder}
+     \end{subfigure}
+        \caption{Encoder-Decoder architecture using LSTM for seq2seq model}
+        \label{fig:enc_dec}
+\end{figure} -->
+
+<h3 id="seq2seq-with-attention">
+<a class="anchor" href="#seq2seq-with-attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>seq2seq with Attention</h3>
+
+<p>A problem with general encoder-decoder seq2seq model is that they give equal importance to all parts of the input sequence. Also, the input sequence is compressed into a single context vector which creates the bottleneck problem, where a piece of long information is tried to be compressed into one small representation.</p>
+
+<p>A solution to this problem was proposed in the work <a href="#myfootnote3">[3]</a> introducing a new mechanism called <strong>Attention</strong>. Attention aligns the output at each decoding step to the whole input sequence in order to learn the most important part of the input aligning with the current step output.</p>
+
+<p>Let’s say we have calculated the encoding hidden states <span class="math"><b>h<sub>1</sub>, h<sub>2</sub>, …, h<sub>n</sub></b></span> for the input sequence <span class="math"><b>x<sub>1</sub>, x<sub>2</sub>, …, x<sub>n</sub></b></span> during the calculation of context vector <strong>Z</strong>. For a decoder hidden state <span class="math"><b>s<sub>t</sub></b></span> on timestep <span class="math"><b>t</b></span>, we get attention score <span class="math"><b>e<sup>t</sup></b></span> as follows:</p>
+
+<div style="text-align: center;">
+<a href="https://www.codecogs.com/eqnedit.php?latex=e%5E%7Bt%7D&amp;space;=&amp;space;%5Bs%5E%7BT%7D_%7Bt%7Dh_%7B1%7D,&amp;space;%5Ccdots,&amp;space;s%5E%7BT%7D_%7Bt%7Dh_%7Bn%7D%5D" target="_blank"><img src="https://latex.codecogs.com/gif.latex?e%5E%7Bt%7D&amp;space;=&amp;space;%5Bs%5E%7BT%7D_%7Bt%7Dh_%7B1%7D,&amp;space;%5Ccdots,&amp;space;s%5E%7BT%7D_%7Bt%7Dh_%7Bn%7D%5D" title="e^{t} = [s^{T}_{t}h_{1}, \cdots, s^{T}_{t}h_{n}]"></a>
+<!-- <span class="math"><b>e<sup>t</sup> = [s<sub>t</sub><sup>T</sup>h<sub>1</sub>, ..., s<sub>t</sub><sup>T</sup>h<sub>n</sub>]</b></span> -->
+</div>
+
+<!-- \begin{equation}
+    \label{eq:att_score}
+        e^{t} = [s^{T}_{t}h_{1}, \cdots, s^{T}_{t}h_{n}]
+\end{equation} -->
+
+<!-- e^{t} = [s^{T}_{t}h_{1}, \cdots, s^{T}_{t}h_{n}] -->
+
+<p>We take the softmax of these scores to get the attention distribution at timestep <strong>t</strong>.</p>
+
+<div style="text-align: center;">
+<a href="https://www.codecogs.com/eqnedit.php?latex=%5Calpha%5E%7Bt%7D&amp;space;=&amp;space;softmax(e%5E%7Bt%7D)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?%5Calpha%5E%7Bt%7D&amp;space;=&amp;space;softmax(e%5E%7Bt%7D)" title="\alpha^{t} = softmax(e^{t})"></a>
+<!-- <span class="math"><b>&prop;<sup>t</sup> = softmax(e<sup>t</sup>)</b></span> -->
+</div>
+
+<!-- \begin{equation}
+    \label{eq:att_dist}
+        \alpha^{t} = softmax(e^{t})
+\end{equation} -->
+
+<p>The attention output <span class="math"><b>a<sub>t</sub></b></span> is then calculated as the weighted sum of encoder hidden state using <span class="math"><b>∝<sup>t</sup></b></span>:</p>
+
+<div style="text-align: center;">
+<!-- <span class="math"><b>a<sub>t</sub> = &prop;<sup>t</sup><sub>i</sub>h<sub>i</sub></b></span> -->
+<a href="https://www.codecogs.com/eqnedit.php?latex=a_%7Bt%7D&amp;space;=&amp;space;%5Csum_%7Bi=1%7D%5E%7Bn%7D&amp;space;%5Calpha_%7Bi%7D%5E%7Bt%7Dh_%7Bi%7D" target="_blank"><img src="https://latex.codecogs.com/gif.latex?a_%7Bt%7D&amp;space;=&amp;space;%5Csum_%7Bi=1%7D%5E%7Bn%7D&amp;space;%5Calpha_%7Bi%7D%5E%7Bt%7Dh_%7Bi%7D" title="a_{t} = \sum_{i=1}^{n} \alpha_{i}^{t}h_{i}"></a>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:att_out}
+        a_{t} = \sum_{i=1}^{n} \alpha_{i}^{t}h_{i}
+\end{equation} -->
+
+<p>Finally, we concatenate the attention output <span class="math"><b>a<sup>t</sup></b></span> with decoder hidden state <span class="math"><b>s<sup>t</sup></b></span> and proceed to calculate the negative log loss same as the non-attention decoder model.</p>
+
+<p>An attentive machine translation model is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/attn.jpg" alt="Attention" width="750px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>Attention model <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture08-nmt.pdf">(source)</a></b></div>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Have a look at <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture08-nmt.pdf">this lecture from CS224n</a>.</li>
+      <li>Read the <a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf">seq2seq paper</a>.</li>
+      <li>Read this <a href="https://mila.quebec/wp-content/uploads/2019/08/1409.0473.pdf">attention paper</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="learning-methods">
+<a class="anchor" href="#learning-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Learning Methods</h2>
+
+<p>Now let’s talk about the learning algorithms that are capable of learning the mapping between input and output representations. Here, we’ll take a look at some of the backbone neural networks (DL architectures) used in various NLP tasks.</p>
+
+<h3 id="recurrent-neural-networks">
+<a class="anchor" href="#recurrent-neural-networks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recurrent Neural Networks</h3>
+<p>Text is a sequential form of data. To process text and extract information from it, we need a model capable of processing the sequential data. <strong>Recurrent Neural Networks (RNNs)</strong> <a href="#myfootnote4">[4]</a> are the most elementary deep learning architectures that are able to learn from sequential data. RNNs are wide in nature as they unroll through time. These networks will have a <em>‘memory’</em> component which can store the information about the previous state. They share the same set of weights throughout the layers, however, will receive a new input at every layer or time-step.</p>
+
+<p>The output to every time-step is dependent on the input taken at the current time-step <span class="math"><b>t<sub>i</sub></b></span> as well as the information gained from previous time-step <span class="math"><b>t<sub>i-1</sub></b></span>. Specifically, an RNN will maintain a hidden state <span class="math"><b>h<sub>t</sub></b></span> at every step which is referred as the memory of network. An illustrated diagram of unrolled RNN is shown in figure below</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/rnn.png" alt="RNN" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>A simple Recurrent Neural Network <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">(source)</a></b></div>
+
+<p>The operations performed in RNN at every time step is given in the equations below:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>h<sub>t</sub> = σ<sub>h</sub> ( W<sub>e</sub>x<sub>t</sub> + W<sub>h</sub>h<sub>t-1</sub> + b<sub>h</sub> )</b></span>
+</div>
+
+<div style="text-align: center;">
+<span class="math"><b>y<sub>t</sub> = σ<sub>y</sub> ( W<sub>y</sub>h<sub>t</sub> + b<sub>y</sub> )</b></span>
+</div>
+
+<!-- \begin{align}\label{eq:rnn}
+    \begin{gathered}
+        h_{t} = \sigma_{h}(W_{e}x_{t} + W_{h}h_{t-1} + b_{h}) \\
+        y_{t} = \sigma_{y}(W_{y}h_{t} + b_{y})
+    \end{gathered}
+\end{align} -->
+
+<p>Here <span class="math"><b>σ<sub>y</sub></b></span> and <span class="math"><b>σ<sub>h</sub></b></span> are the activation functions. <span class="math"><b>W<sub>h</sub></b></span> is the weight matrix to apply transformation on previous hidden state <span class="math"><b>h<sub>t-1</sub>, W<sub>e</sub></b></span> is the weight matrix to apply transformation on the input <span class="math"><b>x<sub>t</sub></b></span> received over time <strong>t</strong>. Combining these with the bias <span class="math"><b>b<sub>h</sub></b></span> yields hidden state <span class="math"><b>h<sub>t</sub></b></span> for time <strong>t</strong>. Applying activation on the <span class="math"><b>h<sub>t</sub></b></span> with <span class="math"><b>W<sub>y</sub></b></span> gives the output <span class="math"><b>y<sub>t</sub></b></span> for every time-step <strong>t</strong>.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Have a look at <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture06-rnnlm.pdf">this lecture from CS224n</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="long-short-term-memory-networks">
+<a class="anchor" href="#long-short-term-memory-networks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Long Short-Term Memory Networks</h3>
+<p>Although, in theory the RNNs are designed to handle the sequence input but in practice they lack in storing the long term dependencies because of the problem of exploding and vanishing gradients <a href="#myfootnote5">[5]</a>. Long Short-Term Memory Networks <a href="#myfootnote6">[6]</a> are the advanced version of RNNs with a slight modification of being capable of deciding what to <strong><em>‘remember’</em></strong> and what to <strong><em>forget</em></strong> from the input sequence with the help of a series of gates. LSTMs have a number of gates: an output gate <span class="math"><b>o<sub>t</sub></b></span>; an input gate <span class="math"><b>i<sub>t</sub></b></span>; a forget gate <span class="math"><b>f<sub>t</sub></b></span> - all of which are the functions of previous hidden state <span class="math"><b>h<sub>t</sub></b></span> and current input <span class="math"><b>x<sub>t</sub></b></span>. These gates interact with the previous cell state <span class="math"><b>c<sub>t-1</sub></b></span>, the current input <span class="math"><b>x<sub>t</sub></b></span>, and the current cell state <span class="math"><b>c<sub>t</sub></b></span> and enable the model to selectively retain or information from the sequence. The full version of LSTM is given in the equation below.</p>
+
+<!-- \begin{equation}\label{eq:lstm}
+    \begin{gathered}    
+        f_{t} = \sigma_{g} (W_{f}x_{t} + U_{f}h_{t-1} + b_{f}) \\
+        i_{t} = \sigma_{g} (W_{i}x_{t} + U_{i}h_{t-1} + b_{i}) \\
+        o_{t} = \sigma_{g} (W_{o}x_{t} + U_{o}h_{t-1} + b_{o}) \\
+        \Tilde{c_{t}} = \sigma_{c} (W_{c}x_{t} + U_{c}h_{t-1} + b_c)\\
+        c_{t} = f_{t} \circ c_{t-1} + i_{t} \circ \Tilde{c_{t}}\\
+        h_{t} = o_{t} \circ \sigma_{h}(c_{t})
+    \end{gathered}
+\end{equation} -->
+
+<div style="text-align: center;">
+<span class="math"><b>f<sub>t</sub> = σ<sub>g</sub> ( W<sub>f</sub>x<sub>t</sub> + U<sub>f</sub>h<sub>t-1</sub> + b<sub>f</sub> )</b></span>
+</div>
+
+<div style="text-align: center;">
+<span class="math"><b>i<sub>t</sub> = σ<sub>g</sub> ( W<sub>i</sub>x<sub>t</sub> + U<sub>i</sub>h<sub>t-1</sub> + b<sub>i</sub> )</b></span>
+</div>
+
+<div style="text-align: center;">
+<span class="math"><b>o<sub>t</sub> = σ<sub>g</sub> ( W<sub>o</sub>x<sub>t</sub> + U<sub>o</sub>h<sub>t-1</sub> + b<sub>o</sub> )</b></span>
+</div>
+
+<div style="text-align: center;">
+<span class="math"><b>ĉ<sub>t</sub> = σ<sub>c</sub> ( W<sub>c</sub>x<sub>t</sub> + U<sub>c</sub>h<sub>t-1</sub> + b<sub>c</sub> )</b></span>
+</div>
+
+<div style="text-align: center;">
+<span class="math"><b>c<sub>t</sub> = f<sub>t</sub> ○ c<sub>t-1</sub> + i<sub>t</sub> ○ ĉ<sub>t</sub></b></span>
+</div>
+
+<div style="text-align: center;">
+<span class="math"><b>h<sub>t</sub> = o<sub>t</sub> ○ σ<sub>h</sub>(c<sub>t</sub>)</b></span>
+</div>
+
+<p>where <span class="math"><b>σ<sub>g</sub></b></span> is the <strong>sigmoid activation function</strong>, <span class="math"><b>σ<sub>c</sub></b></span> and <span class="math"><b>σ<sub>h</sub></b></span> are the <strong>tanh activation function</strong>, and <span class="math"><b>○</b></span> is element-wise multiplication, also known as <strong>Hadamard product</strong>. An illustrated diagram of LSTM is shown below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/lstm.png" alt="LSTM" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>A simple Long-Short Term Memory Network  <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">(source)</a></b></div>
+
+<!-- \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/lstm.png}
+    \caption{LSTM}
+    \label{fig:lstm}
+\end{figure} -->
+
+<p>LSTM layers can be stacked on each other to form multi-layer LSTM architecture. One of the most popular LSTM architecture is Bidirectional LSTM (BiLSTM), where two separate LSTMs are used to capture the sequential information in both forward and backwards directions. Gated Recurrent Units (GRUs) <a href="#myfootnote7">[7]</a> are another advanced version of RNN which are common for handling the vanishing gradient problem, but I am not discussing them here as they are almost similar to LSTM except with no cell-state.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Go through <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">this amazing blog from Christopher Olah</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="convolutional-neural-networks">
+<a class="anchor" href="#convolutional-neural-networks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Convolutional Neural Networks</h3>
+<p>Convolutional Neural Networks (CNNs) <a href="#myfootnote8">[8]</a> have established themselves as state-of-the-art in various computer vision tasks. For the last couple of years, CNNs have been the benchmark for almost every vision task. Inspired from the popularity of CNN in vision, Yoon Kim proposed a CNN architecture for sentence classification which outperformed then benchmarks on various text classification datasets <a href="#myfootnote9">[9]</a>.</p>
+
+<!-- \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/cnn_text.png}
+    \caption{CNN for sentence classification}
+    \label{fig:cnn}
+\end{figure} -->
+
+<!-- CNNs are capable of learning vectors for all possible sub-phrases in a sentence, not just grammatically correct one as done by RNNs.  -->
+<p>A CNN takes an input sentence of <strong>n</strong> words, where each word is represented using a vector of dimension <strong>d</strong>. The input <span class="math"><b>X<sub>1:n</sub></b></span> will be a <strong>2D</strong> matrix of shape <span class="math"><b>n × d</b></span>, where <span class="math"><b>x<sub>i</sub> ∈ ℝ <sup>d</sup> </b></span>. Input <span class="math"><b>X<sub>1:n</sub></b></span> can be represented as:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>X<sub>1:n</sub> = x<sub>1</sub> ⊕, ..., ⊕ x<sub>n</sub></b></span>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:cnn_input}
+    X_{1:n} = x_{1} \oplus x_{2} \oplus \cdots \oplus x_{n}
+\end{equation} -->
+
+<p>where <span class="math"><b>⊕</b></span> is the concatenation operator. On the input layer, convolution filter <span class="math"><b>W ∈ ℝ<sup>hd</sup></b></span> is applied over window of <strong>h</strong> words to generate a new feature. So, a feature <span class="math"><b>c<sub>i</sub></b></span> is generated from the word window <span class="math"><b>x<sub>i:i+h-1</sub></b></span> with the following operation:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>x<sub>i</sub> = σ(Wx<sub>i:i+h-1</sub> + b)</b></span>
+</div>
+<!-- \begin{equation}
+    c_{i} = \sigma (Wx_{i:i+h-1} + b)
+\end{equation} -->
+
+<p>where <strong>W</strong> is the weight matrix for the connections, <span class="math"><b>σ</b></span> is the <strong>activation function</strong> and <span class="math"><b>b ∈ ℝ</b></span> is the bias. Now, this filter is applied to each possible window of words giving an feature map <span class="math"><b>C ∈ ℝ<sup>n-h+1</sup></b></span>.</p>
+
+<div style="text-align: center;">
+<span class="math"><b>C = [c<sub>1</sub>, c<sub>2</sub>, ..., c<sub>n-h+1</sub>]</b></span>
+</div>
+
+<!-- \begin{equation}
+    C = [c_{1}, c_{2}, \cdots, c_{n-h+1}]
+\end{equation} -->
+
+<p>The entries in feature map <strong>C</strong> are sharing the parameter <strong>W</strong>, where each <span class="math"><b>c<sub>i</sub> ∈ C</b></span> is a result of calculation on small segment of the input. Then a <strong>max-pooling</strong> operation is applied on these feature maps to capture the most important part.</p>
+
+<div style="text-align: center;">
+<span class="math"><b>Ĉ = max(C)</b></span>
+</div>
+
+<!-- \begin{equation}
+    \Tilde{C} = max(C)
+\end{equation} -->
+
+<p>This parameter sharing helps the model to incorporate an inductive bias into the model, helping to become learn the location invariant local features. There are <strong>k</strong> number of filters applied to the input with different window sizes which are then concatenated to form a vector <span class="math"><b>K ∈ ℝ<sup>k</sup></b></span>. Which is then fed to the next hidden layer or output layer.</p>
+
+<p>An illustrated diagram of a CNN architecture for text classification is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/cnn.png" alt="CNN" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>A simple CNN for Text Classification <a href="https://www.aclweb.org/anthology/D14-1181.pdf">(source)</a></b></div>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Have a look at the <a href="https://www.aclweb.org/anthology/D14-1181.pdf">CNN for text classification paper</a>.</li>
+      <li>Also have a look at <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture11-convnets.pdf">this lecture from CS224n</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="transformers">
+<a class="anchor" href="#transformers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transformers</h3>
+
+<p>Most of the above models have recurrent behaviour, which can not be trained parallelly. This imposes a huge problem of time taken to train a model from scratch. In the work <a href="#myfootnote10">[10]</a>, authors proposed a new neural architecture called <strong>Transformers</strong> which uses a combination of <strong>self-attention</strong> and <strong>feed-forward network</strong> and doesn’t require any recurrent or convolutional elements. Also, the self-attention module lets the model capture the long term dependencies in a sentence without having any effect of the sentence length.</p>
+
+<p>This new model was a huge success gaining better performance on various sequential learning tasks. To name one, it improved the machine translation performance by <strong>10 BLEU</strong> on <strong>WMT EN-FR and WMT EN-DE datasets</strong>. It also reduced the training time by large margin benefiting from the non-recurrent behaviour.</p>
+
+<p>The success of transformer architecture paved the way for the development of new models to solve the sequential tasks. It helped NLP researchers to utilize its non-recurrent nature in transfer learning where the transformer is used for general pre-training of a language model (LM). Then the LM fine-tuned on domain-specific dataset for downstream tasks. An encoder-decoder model using Transformer architecture is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/transformer.png" alt="Transformers" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>A Transformer <a href="https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf">(source)</a></b></div>
+
+<p>I cannot provide an in-depth overview of the Transformer but you can refer to resources below for a better understanding.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Go through the main paper <a href="https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf">“Attention is all you need”</a>.</li>
+      <li>Take a look at <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">this amazing blog</a>.</li>
+      <li>Must read - <a href="http://jalammar.github.io/illustrated-transformer/">Jay Alammar’s blog on Transformers</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="language-models">
+<a class="anchor" href="#language-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Language Models</h2>
+<p>Another important concept we should be aware of in NLP is Language Models (LM), because transfer learning in NLP is applied using different versions of LMs only. A language model is a type of system that predicts the probability of possible next words for a given sequence of words as the input.</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/lang_model.png" alt="LM" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>A simple Language Model <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture06-rnnlm.pdf">(source)</a></b></div>
+
+<p>In general terms, for a given sequence of input <span class="math"><b>(x<sub>1</sub>, x<sub>2</sub>, …, x<sub>t</sub>)</b></span> the probability distribution of next term <span><b>(x<sub>t+1</sub>)</b></span> is computed from a vocabulary <strong>V</strong> of <strong>k</strong> words <span><b>(V = (w<sub>1</sub>, w<sub>1</sub>, …, w<sub>k</sub>))</b></span> as given below:</p>
+
+<!-- $(x_{1}, x_{2}, \cdots, x_{t})$,  -->
+<!-- $x_{t+1}$ -->
+<!-- ($V = (w_{1}, w_{2}, \cdots, w_{k})$) -->
+
+<!-- \begin{equation}
+    \label{eq:lm_dist}
+        P(x_{t+1}|x_{1}, \cdots, x_{t})
+\end{equation} -->
+
+<div style="text-align: center;">
+<span class="math"><b>P(x<sub>t+1</sub>|x<sub>1</sub>, ..., x<sub>t</sub>)</b></span>
+</div>
+
+<p>Earlier the language models were based on statistical approaches where they used to take a window of <strong>n</strong> words as a context from the sentence to predict the next word. This approach is also known as <strong>n-gram</strong> Language Model. It takes a simple approach of calculating the conditional probability of next word in the sentence given the window of <strong>n</strong> words as a context. These <strong>n-gram</strong> probabilities are calculated from counting them in some large corpus of text.</p>
+
+<div style="text-align: center;">
+<span class="math"><b>P(x<sub>t+1</sub>|x<sub>1</sub>, ..., x<sub>t</sub>) = P(x<sub>t+1</sub>, x<sub>t</sub>, ..., x<sub>t-n+2</sub>) ⁄ P(x<sub>t</sub>, ..., x<sub>t-n+2</sub>)</b></span>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:lm_ngram}
+        P(x_{t+1}|x_{1}, \cdots, x_{t}) = 
+            \frac {P(x_{t+1}, x_{t}, \cdots, x_{t-n+2})} {P(x_{t}, \cdots, x_{t-n+2})}
+\end{equation} -->
+
+<p>or in simpler terms:</p>
+
+<div style="text-align: center;">
+<span class="math"><b>P(w<sub>3</sub>|w<sub>1</sub>, w<sub>2</sub>) = P(w<sub>1</sub>, w<sub>2</sub>, w<sub>3</sub>) ⁄ P(w<sub>1</sub>, w<sub>2</sub>)</b></span>
+</div>
+
+<!-- \begin{equation}
+    \label{eq:lm_count_ngram}
+        P(w_{3}|w_{1},w_{2}) = \frac{count(w_{1}, w_{2}, w_{3})}{count(w_{1}, w_{2})}
+\end{equation} -->
+
+<p>This statistical approach has mainly two problems. First, sparsity - consider the above equation, what if <span class="math"><b>w<sub>1</sub>, w<sub>2</sub>, w<sub>3</sub></b></span> never occurred together, the probability of <span class="math"><b>w<sub>3</sub></b></span> will be <strong>0</strong>. Second, storage - as we increase the value of <strong>n</strong>, the count of all <strong>n-grams</strong> we see in the corpus increases as well and so does the need of memory to store them.</p>
+
+<!-- $w_{1}$, $w_{2}$ and $w_{3}$  -->
+
+<!-- $w_{3}$  -->
+<!-- Also, if <span class="math"><b>w<sub>1</sub> and w<sub>2</sub></b></span> $w_{1}$ and $w_{2}$ then there's no way to calculate the probability of $w_{3}$.  -->
+
+<p>The neural language models using RNNs and Transformers are capable of modelling all the words in a sentence without needing a window to predict the next word at each timestep. You can think of a simple RNN for neural LM, where the RNN takes input tokens one at a time and by processing them generates the hidden state of each timestep. At the final time step, the output of that RNN block will be taken as the softmax against the whole vocabulary, and the word with the highest probability will be the prediction of LM as next word in the sequence.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>For a better and deeper understanding please refer to <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/slides/cs224n-2019-lecture06-rnnlm.pdf">this lecture from CS224n</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- \subsubsection{Recurrent Neural Networks} \label{sec:rnn} -->
+
+<h2 id="transfer-learning">
+<a class="anchor" href="#transfer-learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transfer Learning</h2>
+
+<p>NLP cracked transfer learning by applying a simple rule: first, learn the general nuances of text (grammar-rules or fill in the blanks) from a huge corpus of text using a language model; and then transfer that learning by fine-tuning the language model on a task-specific dataset. In the following sections, we’ll discuss some of the advancements in using different versions of LMs for transfer learning. 
+<!-- This was the ***The Imagenet Moment of NLP***. --></p>
+
+<h3 id="embeddings-learned-from-language-models">
+<a class="anchor" href="#embeddings-learned-from-language-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Embeddings Learned from Language Models</h3>
+
+<p>As discussed in the <a href="#word-embeddings">above section</a>, the word embeddings generated by algorithms like word2vec and GloVe lack the contextual awareness and fail to differentiate a word with different senses. A new version of words embeddings, known as, <strong>contextual word embeddings</strong> are capable of differentiating a word’s sense based on its context. These new models use a Language Model (LM) to generate the contextualised representation of words in a sentence. These modified embeddings generated from the LMs can be used as the input to another neural network for some downstream tasks.</p>
+
+<!-- #### Embeddings Learned from Language Models -->
+
+<p><strong>ELMo</strong> <a href="#myfootnote11">[11]</a> is one such embedding algorithm that uses a <strong>bidirectional language model</strong> to capture the context of a word in a sentence from both sides (left to right and vice-versa). ELMo uses a <strong>character-level CNN</strong> to convert raw text into a word vector which is then fed into a bidirectional language model. The output of this BiLM is then sent to the next layer of BiLM to form a set of intermediate word vectors. The final output of ELMo is the weighted sum of raw vectors and the intermediate vectors formed from two layers of the BiLMs. The two language models used here are based on LSTM architectures. An illustration of ELMo is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/elmo.png" alt="ELMo" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>ELMo Model <a href="https://www.analyticsvidhya.com/blog/2019/03/learn-to-use-elmo-to-extract-features-from-text/">(source)</a></b></div>
+
+<p>ELMo achieved 9% error reduction on the SQuAD (question-answering) dataset compared to then SOTA, 16% on Ontonotes SRL dataset, 10% on Ontonotes coreference dataset and 4% on CoNLL 2003 dataset. The fact that these embeddings are contextual and have the knowledge of word senses, helps ELMo and other future models such as BERT and GPT perform so much better.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Before ELMo, CoVe proposed a similar idea. Have a look at the <a href="http://papers.nips.cc/paper/7209-learned-in-translation-contextualized-word-vectors.pdf">paper</a>, if you fancy reading.</li>
+      <li>Read the <a href="https://www.aclweb.org/anthology/N18-1202.pdf">ELMo Paper</a>.</li>
+      <li>
+<a href="https://arxiv.org/pdf/1902.06006.pdf">Recommended notes for a quick read</a>.</li>
+      <li>Have a look at <a href="http://web.stanford.edu/class/cs224u/materials/cs224u-2020-contextualreps-handout.pdf">this lecture from CS224u</a>.</li>
+      <li>Also, go through <a href="https://www.analyticsvidhya.com/blog/2019/03/learn-to-use-elmo-to-extract-features-from-text/">this amazing blog on Analytics Vidhya</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="universal-language-model-fine-tuning">
+<a class="anchor" href="#universal-language-model-fine-tuning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Universal Language Model Fine-Tuning</h3>
+
+<p>Universal Language Model Fine-Tuning (ULMFiT) <a href="#myfootnote12">[12]</a> can be considered as one of the pioneers of applying transfer learning on an NLP task (text classification). It does so in three main steps: first, training a general domain-independent language model on a large corpus of text; second, fine-tune the language model on task-specific target dataset; and third, again fine-tuning the fine-tuned language model as a classifier by adding a softmax activation on top with target dataset. An illustration of the three steps of ULMFiT is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/ulmfit.jpg" alt="ULMFiT" width="750px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>ULMFiT Model <a href="https://www.aclweb.org/anthology/P18-1031.pdf">(source)</a></b></div>
+
+<p>ULMFiT achieved better results for text classification on six different datasets ranging from topic classification to sentiment analysis. The fine-tuning approach employed by ULMFiT is also very interesting, where different learning rates are applied to different layers of the network. I would recommend reading the paper to get a better understanding of the updated version of backpropagation through time algorithm.</p>
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>
+<strong>Definitely read</strong> the <a href="https://www.aclweb.org/anthology/P18-1031.pdf">ULMFiT Paper</a>.</li>
+      <li>Have a look at <a href="https://humboldt-wi.github.io/blog/research/information_systems_1819/group4_ulmfit/">this amazing blog</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="generative-pre-training">
+<a class="anchor" href="#generative-pre-training" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generative Pre-Training</h3>
+
+<p>One of the earliest works in using Transformers for pre-training of language model and applying transfer learning was presented in Generative Pre-Training (GPT) <a href="#myfootnote13">[13]</a>. Following the idea from ELMo, authors proposed a <strong>language model</strong> using <strong>transformer decoder</strong> trained on a large corpus of text. The main difference of GPT from ELMo is that ELMo uses two independent LSTM language models to capture the forwards and backward context whereas, in case of GPT, it uses a uni-directional multi-layer transformer language model capable of capturing context due to its attentive nature.</p>
+
+<p><strong>ELMo</strong> takes a <strong>feature-based approach</strong> of generating feature vectors (or contextual representations of the sentences) for different tasks, whereas <strong>GPT</strong> takes a <strong>fine-tuning based approach</strong> where the same language model trained on huge corpus is fine-tuned on task-specific data for downstream tasks. An illustration of a GPT model used for pre-training is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/g.png" alt="GPT" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>GPT Model <a href="https://lilianweng.github.io/lil-log/2019/01/31/generalized-language-models.html#openai-gpt">(source)</a></b></div>
+
+<!-- \begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/GPT.png}
+    \caption{GPT architecture.}
+    \label{fig:gpt}
+\end{figure} -->
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Read the <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf">GPT Paper</a>.</li>
+      <li>The updated version <a href="https://openai.com/blog/better-language-models/">GPT-2 Paper</a>.</li>
+      <li>A <a href="https://lilianweng.github.io/lil-log/2019/01/31/generalized-language-models.html#openai-gpt">blog post</a> similar to this one.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="bidirectional-encoder-representation-from-transformers">
+<a class="anchor" href="#bidirectional-encoder-representation-from-transformers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bidirectional Encoder Representation from Transformers</h3>
+
+<p>Bidirectional Encoder Representation from Transformers (BERT) <a href="#myfootnote14">[14]</a> is another example of the success of transfer learning in NLP. BERT is a bidirectional transformer language model trained on a large text corpus that can be fine-tuned on any domain-specific dataset for the downstream tasks such as text classification, or named entity recognition. BERT mainly differs from other models like GPT and ELMo because of the pre-training tasks used during the unsupervised training of language model. Its pre-training is based on two tasks: first, <strong>Masked Language Model (MLM)</strong>; and second, <strong>prediction of next sentence</strong> from the corpora.</p>
+
+<p>For the first task of <strong>Masked Language Model</strong>, let’s say we have a sentence <strong><em>‘Boris Johnson is the Prime Minister of UK’</em></strong>. So instead of training for prediction of next word in the sentence as a general Language Model, BERT pre-training replaces 15% of the words with a <strong>[MASK] token</strong> and learns to predict the correct word at the position of <strong>[MASK] token</strong>. In the second task of <strong>Next Sentence Prediction</strong>, the model is trained to learn the relationship between sentences where, for a given sentence pair A &amp; B, the model is asked to predict if the sentence B is the next sentence that comes after A.</p>
+
+<p>BERT improved the fine-tuning based approach of GPT by using a bidirectional transformer and learning both left &amp; right context at the same time. This gave a huge improvement over GPT’s unidirectional approach especially for token-level tasks like Question Answering, where the answer depends on both left and right contexts. An illustrated diagram of BERT pre-training and fine-tuning is shown in the figure below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/bert1.png" alt="BERT 1" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>BERT Model <a href="https://arxiv.org/pdf/1810.04805.pdf">(source)</a></b></div>
+
+<p>A visual comparison between BERT, GPT and ELMo architectures presented in the paper is shown below:</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/nlp-dl/bert2.png" alt="BERT 2" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
+<div style="text-align: center;"><b>BERT, GPT and ELMo <a href="https://arxiv.org/pdf/1810.04805.pdf">(source)</a></b></div>
+
+<p>We can see, BERT uses the bi-directional transformer for processing the sequence, while GPT uses a uni-directional transformer. On the other hand, ELMo uses bi-directional LSTM to capture the bi-directional context while processing the input.</p>
+
+<!-- \begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/bert1.png}
+    \caption{BERT \cite{devlin2018bert}}
+    \label{fig:bert1}
+\end{figure}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\textwidth]{images/bert2.png}
+%     \caption{BERT, GPT and ELMo \cite{devlin2018bert}}
+%     \label{fig:bert2}
+% \end{figure}
+ -->
+
+<ul>
+  <li>
+<strong>Other Resources</strong>
+    <ul>
+      <li>Read the <a href="https://arxiv.org/pdf/1810.04805.pdf">BERT Paper</a>.</li>
+      <li>Have a look at <a href="http://jalammar.github.io/illustrated-bert/">this amazing blog by Jay Alammar</a>).</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="further-steps">
+<a class="anchor" href="#further-steps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Steps</h2>
+
+<p>If you have made this far, then why not have some awesome resources for your further exploration.</p>
+
+<ul>
+  <li>I would recommend looking at these amazing repositories:
+    <ul>
+      <li>
+<a href="https://nlpprogress.com/">NLP-Progress</a>: An open-source repo that tracks the SOTA in several NLP tasks in multiple languages.</li>
+      <li>
+<a href="https://github.com/keon/awesome-nlp/">Awesome NLP</a>: Another open-source repo providing a single place for many NLP resources.</li>
+    </ul>
+  </li>
+  <li>If you would like to study from some online courses, here are my top recommendations:
+    <ul>
+      <li>
+<a href="https://www.fast.ai/2019/07/08/fastai-nlp/">fast.ai Course</a>: A Code-First Introduction to NLP</li>
+      <li>
+<a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/index.html">Stanford’s CS224n</a>: Natural Language Processing with Deep Learning</li>
+      <li>
+<a href="http://web.stanford.edu/class/cs224u/">Stanford’s CS224U</a>: Natural Language Understanding</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="acknowledgement">
+<a class="anchor" href="#acknowledgement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Acknowledgement</h2>
+
+<ul>
+  <li>
+    <p>The blog’s idea is highly inspired by <a href="https://ruder.io/thesis/neural_transfer_learning_for_nlp.pdf">Sebestian Ruder’s PhD thesis</a>. Especially the background chapter, where a quick overview of deep learning is provided before proceeding to the contributions of the thesis.</p>
+  </li>
+  <li>
+    <p>I would like to thank <a href="https://www.iiitnr.ac.in/node/1614">Dr Muneendra Ojha</a> and <a href="https://krutikabapat.github.io/">Krutika Bapat</a> for reviewing the blog.</p>
+  </li>
+  <li>
+    <p>I took the help of numerous online resources to get a better understanding of this field. Some are listed here if I have missed any blog/resource - sincere apologies for that. Please comment here or write an email, I’ll properly acknowledge them.</p>
+    <ul>
+      <li><a href="https://ruder.io/">Sebestian Ruder’s Blogs</a></li>
+      <li><a href="https://colah.github.io/">Christopher Olah’s Blogs</a></li>
+      <li><a href="http://jalammar.github.io/">Jay Alammar’s Blogs</a></li>
+      <li><a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/">Stanford’s CS224n Course</a></li>
+      <li><a href="http://web.stanford.edu/class/cs224u/">Stanford’s CS224u Course</a></li>
+      <li><a href="https://www.analyticsvidhya.com/blog/">Analytics Vidhya Blog</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="references">
+<a class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h2>
+
+<p><a name="myfootnote1">[1]</a> Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S. &amp; Dean, J. (2013), Distributed representations of words and phrases and their compositionality,in‘Advances in neural information processing systems’, pp.3111–3119.</p>
+
+<p><a name="myfootnote2">[2]</a> Pennington,J., Socher,R. &amp; Manning,C. (2014), Glove: Global vectors for word representation, in ‘Proceed-ings of the 2014 conference on empirical methods in natural language processing (EMNLP)’, pp. 1532–1543.</p>
+
+<p><a name="myfootnote3">[3]</a> Bahdanau, D., Cho, K. &amp; Bengio, Y. (2014), ‘Neural machine translation by jointly learning to align and translate’,arXiv preprint arXiv:1409.0473.</p>
+
+<p><a name="myfootnote4">[4]</a> Elman, J. L. (1990), ‘Finding structure in time’,Cognitive science14(2), 179–211.Graves, A., Jaitly, N. &amp; Mohamed, A.-r. (2013), Hybrid speech recognition with deep bidirectional lstm, in ‘2013 IEEE workshop on automatic speech recognition and understanding’, IEEE, pp. 273–278.</p>
+
+<p><a name="myfootnote5">[5]</a> Bengio, Y., Simard, P., Frasconi, P. et al. (1994), ‘Learning long-term dependencies with gradient descent is difficult’, IEEE transactions on neural networks.</p>
+
+<p><a name="myfootnote6">[6]</a> Hochreiter, S. &amp; Schmidhuber, J. (1997), ‘Long short-term memory’, Neural computation 9(8), 1735–1780.</p>
+
+<p><a name="myfootnote7">[7]</a> Cho, Kyunghyun, et al. “Learning phrase representations using RNN encoder-decoder for statistical machine translation.” arXiv preprint arXiv:1406.1078 (2014).</p>
+
+<p><a name="myfootnote8">[8]</a> LeCun, Y., Bottou, L., Bengio, Y., Haffner, P. et al. (1998), ‘Gradient-based learning applied to document recognition’,Proceedings of the IEEE86(11), 2278–2324.</p>
+
+<p><a name="myfootnote9">[9]</a> Kim, Yoon. “Convolutional Neural Networks for Sentence Classification.” Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP). 2014.</p>
+
+<p><a name="myfootnote10">[10]</a> Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł. &amp; Polosukhin, I.(2017),Attention is all you need, in‘Advances in neural information processing systems’, pp.5998–6008</p>
+
+<p><a name="myfootnote11">[11]</a> Peters, M. E., Neumann, M., Iyyer, M., Gardner, M., Clark, C., Lee, K. &amp; Zettlemoyer, L. (2018), ‘Deep contextualized word representations’,arXiv preprint arXiv:1802.05365.</p>
+
+<p><a name="myfootnote12">[12]</a> Howard, J.&amp;Ruder, S.(2018), ‘Universal language model fine-tuning for text classification’, arXiv preprintarXiv:1801.06146.</p>
+
+<p><a name="myfootnote13">[13]</a> Radford, A., Narasimhan, K., Salimans, T. &amp; Sutskever, I. (2018), ‘Improving language un-derstanding by generative pre-training’.</p>
+
+<p><a name="myfootnote14">[14]</a> Devlin, J., Chang, M.-W., Lee, K. &amp; Toutanova, K. (2018), ‘Bert: Pre-training of deep bidirectional transformers for language understanding’, arXiv preprint arXiv:1810.04805.</p>
+
+  </div><a class="u-url" href="/nlp-blog/blog/nlp/transfer%20learning/deep%20learning/transformers/lstms/rnns/2020/07/21/DL-in-NLP.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/nlp-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/nlp-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/nlp-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Some simple stuff about NLP.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/ashishu007" title="ashishu007"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/ashishu007_" title="ashishu007_"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

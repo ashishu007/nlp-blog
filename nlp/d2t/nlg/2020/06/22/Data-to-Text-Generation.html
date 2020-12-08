@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Introduction to Data-to-Text Generation | NLP-Blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Introduction to Data-to-Text Generation" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Introduction to Data-to-Text Generation." />
+<meta property="og:description" content="Introduction to Data-to-Text Generation." />
+<link rel="canonical" href="https://ashishu007.github.io/nlp-blog/nlp/d2t/nlg/2020/06/22/Data-to-Text-Generation.html" />
+<meta property="og:url" content="https://ashishu007.github.io/nlp-blog/nlp/d2t/nlg/2020/06/22/Data-to-Text-Generation.html" />
+<meta property="og:site_name" content="NLP-Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-22T00:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"https://ashishu007.github.io/nlp-blog/nlp/d2t/nlg/2020/06/22/Data-to-Text-Generation.html","@type":"BlogPosting","headline":"Introduction to Data-to-Text Generation","dateModified":"2020-06-22T00:00:00-05:00","datePublished":"2020-06-22T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ashishu007.github.io/nlp-blog/nlp/d2t/nlg/2020/06/22/Data-to-Text-Generation.html"},"description":"Introduction to Data-to-Text Generation.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/nlp-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://ashishu007.github.io/nlp-blog/feed.xml" title="NLP-Blog" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-173216826-1','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/nlp-blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/nlp-blog/">NLP-Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/nlp-blog/about/">About Me</a><a class="page-link" href="/nlp-blog/search/">Search</a><a class="page-link" href="/nlp-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Introduction to Data-to-Text Generation</h1><p class="page-description">Introduction to Data-to-Text Generation.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-06-22T00:00:00-05:00" itemprop="datePublished">
+        Jun 22, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      7 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#nlp">nlp</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#d2t">d2t</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-blog/categories/#nlg">nlg</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#introduction-to-data-to-text-generation">Introduction to Data-to-Text Generation</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#natural-language-generation">Natural Language Generation</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#t2t-nlg">T2T NLG</a></li>
+<li class="toc-entry toc-h3"><a href="#d2t-nlg">D2T NLG</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#subtasks-in-d2t-nlg">Subtasks in D2T NLG</a></li>
+<li class="toc-entry toc-h2"><a href="#public-datasets-and-evaluation-metrics">Public Datasets and Evaluation Metrics</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#rotowire">RotoWire</a></li>
+<li class="toc-entry toc-h3"><a href="#webnlg">WebNLG</a></li>
+<li class="toc-entry toc-h3"><a href="#meaning-representations">Meaning Representations</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#further-steps">Further Steps</a></li>
+</ul>
+</li>
+</ul><h1 id="introduction-to-data-to-text-generation">
+<a class="anchor" href="#introduction-to-data-to-text-generation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction to Data-to-Text Generation</h1>
+
+<p>After wandering in the vast NLP research field for some time, I finally decided to work towards <strong>data-to-text generation</strong> in my PhD. In this blog, I’ll try to provide: a brief overview of the task’s requirements; some standard public datasets available; and the evaluation metrics used for measuring the performance on these datasets.</p>
+
+<!-- **Table of Contents**
+
+- [Natural Language Generation](#natural-language-generation)
+  * [T2T NLG](#t2t-nlg)
+  * [D2T NLG](#d2t-nlg)
+- [Subtasks in D2T NLG](#subtasks-in-d2t-nlg)
+- [Public Datasets and Evaluation Metrics](#public-datasets-and-evaluation-metrics)
+  * [RotoWire](#rotowire)
+  * [WebNLG](#webnlg)
+  * [Meaning Representations](#meaning-representations)
+- [Further Steps](#further-steps)
+- [References](#references)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small> -->
+
+<h2 id="natural-language-generation">
+<a class="anchor" href="#natural-language-generation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Natural Language Generation</h2>
+
+<p>First, I’ll start with a small introduction on Natural Language Generation (NLG). In NLG, the requirement is to generate a textual document (in some natural language) for the given input (in some format).</p>
+
+<p>There are several real-world applications to automated text generation. Here are some examples.</p>
+
+<!-- <table>
+    <tr>
+        <td><img src="/assets/d2t/med.jpg" style="border:1px solid black;" width="500"></td>
+        <td>Let's take the <b>Medical Reporting</b> domain - suppose there's a doctor who has to analyse the data from some patients different medical test results. The doctor will have to analyse each test's result in order to make a decision on the patient's condition. A summary of these test results in a textual format highlighting the main parts can be very benificial to the doctor and will reduce a lot of their time and effort required.</td>
+    </tr>
+</table> -->
+
+<p><!-- <img style="vertical-align:middle" src="https://placehold.it/60x60"> -->
+  <!-- <img src="/assets/d2t/med.jpg" style="border:1px solid black;vertical-align:middle"> --></p>
+
+<!-- <div class="box">
+  <img src="/assets/d2t/med.jpg" style="border:1px solid black" width="300">
+  <span style=""><p style="text-align:right;">Take the <b>Medical Reporting</b> domain for instance - suppose there's a doctor who has to analyse the data from some patients different medical test results. The doctor will have to analyse each test's result in order to make a decision on the patient's condition. A summary of these test results in a textual format highlighting the main parts can be very benificial to the doctor and will reduce a lot of their time and effort required.</p></span>
+</div>
+
+<div class="box">
+  <span style=""> Take another example of <b>Weather Forecasting</b> - a textual report about the weather conditions summarising the huge numerical data can be very benificial for a meteorologist. Even for the general public, those reports can be very helpful in providing the weather information breifly.</span>
+  <img src="/assets/d2t/weather.gif" style="border:1px solid black" width="350">
+</div>
+ -->
+
+<!-- | ![Medical Domain](/assets/d2t/med.jpg) | Take the **Medical Reporting** domain for instance - suppose there's a doctor who has to analyse the data from some patients different medical test results. The doctor will have to analyse each test's result in order to make a decision on the patient's condition. A summary of these test results in a textual format highlighting the main parts can be very benificial to the doctor and will reduce a lot of their time and effort required. |
+| :-----: | :-----:|
+| Take another example of **Weather Forecasting** - a textual report about the weather conditions summarising the huge numerical data can be very benificial for a meteorologist. Even for the general public, those reports can be very helpful in providing the weather information breifly. | ![Weather Forecasting](/assets/d2t/weather.gif) | -->
+
+<!-- <img src="/assets/d2t/med.jpg" align="left" style="margin: 0px 10px 0px 0px;"/><p>Take the <b>Medical Reporting</b> domain for instance - suppose there's a doctor who has to analyse the data from some patients different medical test results. The doctor will have to analyse each test's result in order to make a decision on the patient's condition. A summary of these test results in a textual format highlighting the main parts can be very benificial to the doctor and will reduce a lot of their time and effort required.</p>
+
+<img src="/assets/d2t/weather.gif" align="right"/><p>Take another example of <b>Weather Forecasting</b> - a textual report about the weather conditions summarising the huge numerical data can be very benificial for a meteorologist. Even for the general public, those reports can be very helpful in providing the weather information breifly.</p> -->
+
+<!-- <img style="vertical-align:middle" src="https://placehold.it/60x60"> -->
+<!-- <img src="/assets/d2t/med.jpg" style="border:1px solid black;vertical-align:middle"> -->
+
+<!-- <p><img src="/assets/d2t/med.jpg" style="border:1px solid black;" width="500">Let's take the <b>Medical Reporting</b> domain - suppose there's a doctor who has to analyse the data from some patients different medical test results. The doctor will have to analyse each test's result in order to make a decision on the patient's condition. A summary of these test results in a textual format highlighting the main parts can be very benificial to the doctor and will reduce a lot of their time and effort required.</p> -->
+
+<table style="margin-left:auto;margin-right:auto;">
+  <tr>
+    <td><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/med.jpg" width="300"></td>
+    <td><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/weather.gif" width="350"></td>
+  </tr>
+</table>
+
+<!-- | ![Medical Domain](/assets/d2t/med.jpg) | ![Weather Forecasting](/assets/d2t/weather.gif) |
+| :-----: | :-----:| -->
+
+<blockquote>
+  <p>Take the <b>Medical Reporting</b> domain for instance - suppose there’s a doctor who has to analyse the data from some patients different medical test results. The doctor will have to analyse each test’s result in order to make a decision on the patient’s condition. A summary of these test results in a textual format highlighting the main parts can be very benificial to the doctor and will reduce a lot of their time and effort required.</p>
+</blockquote>
+
+<blockquote>
+  <p>Take another example of <b>Weather Forecasting</b> - a textual report about the weather conditions summarising the huge numerical data can be very benificial for a meteorologist. Even for the general public, those reports can be very helpful in providing the weather information breifly.</p>
+</blockquote>
+
+<p>Based on the input provided to the system, NLG can be broadly categorised into two different categories: first, <strong>text-to-text generation (T2T NLG)</strong>; and second, <strong>data-to-text generation (D2T NLG)</strong>.</p>
+
+<h3 id="t2t-nlg">
+<a class="anchor" href="#t2t-nlg" aria-hidden="true"><span class="octicon octicon-link"></span></a>T2T NLG</h3>
+<p>As the name suggests, in <strong>text-to-text generation</strong>, our goal is to generate text from unstructured textual input. For example, machine translation, where we take a text document in one natural language as input and produce the same content in different natural language as output.</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/t2tnlg.jpg" alt="T2T NLG" width="850px" style="display:block;margin-left:auto;margin-right:auto;">
+<!-- <kbd> -->
+<!-- <img src="/assets/d2t/t2tnlg.jpg" style="border:1px solid black;margin-left:auto;margin-right:auto;" width="850"> -->
+<!-- </kbd> --></p>
+<p style="text-align: center;"><b>Text-to-Text Natural Language Generation (T2T NLG)</b></p>
+
+<h3 id="d2t-nlg">
+<a class="anchor" href="#d2t-nlg" aria-hidden="true"><span class="octicon octicon-link"></span></a>D2T NLG</h3>
+<p>For <strong>data-to-text generation</strong>, the input is presented in a structured format, i.e., tablular, graphical or JSON format. With this structured input, we generate a textual output summarising the input values. For example, summarising NBA match where, for given box- and line-scores as input we have to generate a textual summary of the match as the output.</p>
+
+<p><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/d2tnlg.jpg" alt="D2T NLG" width="850px" style="display:block;margin-left:auto;margin-right:auto;">
+<!-- <kbd> -->
+<!-- <img src="/assets/d2t/d2tnlg.jpg" style="border:1px solid black;margin-left:auto;margin-right:auto;" width="850"> -->
+<!-- </kbd> --></p>
+<p style="text-align: center;"><b>Data-to-Text Natural Language Generation (D2T NLG)</b></p>
+
+<!-- As I'm exploring D2T NLG in my PhD, I'll briefly discuss this task in detail in further sections. -->
+
+<p>In general, automated text generation is challenging because <strong>grammar rules</strong> are <strong>very complex</strong>, and also, there can be <strong>several meaning</strong> to <strong>same words</strong> in different context.</p>
+
+<p>Even after we develop an automated system for text generation, it is challenging to automatically evaluate the texts generated from that system. Unlike most supervised problems, there’s <strong>no class knowledge</strong> in form of labels to evaluate the performance. Here the system’s goal is to generate <strong>accurate</strong>, <strong>fluent</strong>; and <strong>diverse</strong> texts, not just predicting some label like in most of the other NLP tasks.</p>
+
+<!-- Apart from all this, the real-world applications (such as the automated obituary generator) suffer from data related problems as well. For starter, you might **not** have **any labelled data** to start building your system. There might be requirement of **a domain expert** to manually label some data, and that may be very expensive. After some-time you might collect some labelled data as a part of your deployment process, that data should be used to refine your system.  -->
+
+<!-- No data -->
+
+<h2 id="subtasks-in-d2t-nlg">
+<a class="anchor" href="#subtasks-in-d2t-nlg" aria-hidden="true"><span class="octicon octicon-link"></span></a>Subtasks in D2T NLG</h2>
+
+<p>Data-to-Text generation is a long process. It invovles a lot of things - selecting important insights from the data to finally generating the textual document summarising that data. In general, the whole pipeline of D2T can be broadly categorised into these different subtasks:
+<!-- <sup>[[1]](#myfootnote1)</sup> shown here: --></p>
+
+<!-- Let's talk about the subtasks involved in D2T NLG, which can be divided into six different subtasks : -->
+
+<ul>
+  <li>
+    <p><strong><em>Content Determination</em></strong>: deciding which information from the input will be included in the final text;</p>
+  </li>
+  <li>
+    <p><strong><em>Text Structuring</em></strong>: select the ordering of the selected information in the final text output;</p>
+  </li>
+  <li>
+    <p><strong><em>Sentence Aggregation</em></strong>: selecting which information to be presented in a separate sentence and which two (or more) information can be presented in the same sentence;</p>
+  </li>
+  <li>
+    <p><strong><em>Lexicalisation</em></strong>: finding the correct words and phrases to express the information in a sentence;</p>
+  </li>
+  <li>
+    <p><strong><em>Referring Expression Generation</em></strong>: selecting domain-specific words and phrases; and</p>
+  </li>
+  <li>
+    <p><strong><em>Realisation</em></strong>: Combining all the words and phrases into well-formed sentences.</p>
+  </li>
+</ul>
+
+<!-- ![D2T NLG](/assets/d2t/tasks.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"} -->
+<!-- <kbd> -->
+
+<p>Let’s discuss these subtasks with an example. The figure below illustrates a simplified example from the <strong>neonatal intensive care domain</strong>.</p>
+
+<!-- <img src="/assets/d2t/tasks.jpg" style="border:1px solid black;vertical-align:middle;margin:0px 85px" width="850">
+<p style="text-align: center;"><b>Subtasks in D2T NLG <a href="https://www.jair.org/index.php/jair/article/download/11173/26378/">(source)</a></b></p>
+
+The tasks that needs to be performed in order to generate the full textual summary from the input data can be described as follows:
+
+> First the system has to decide what the important events are in the data (a, **content determination**), in this case, occurrences of low heart rate (bradycardias). 
+
+> Then it has to decide in which order it wants to present data to the reader (b, **text structuring**) and how to express these in individual sentence plans (c, **aggregation**; **lexicalisation**; **reference**). 
+
+> Finally, the resulting sentences are generated (d, **linguistic realisation**). -->
+
+<p><!-- <img style="vertical-align:middle" src="https://placehold.it/60x60"> --></p>
+
+<!-- <div class="box">
+  <span style="">
+    The tasks that needs to be performed in order to generate the full textual summary from the input data can be described as follows:
+    <blockedquote>
+      <p>First the system has to decide what the important events are in the data (a, <b>content determination</b>), in this case, occurrences of low heart rate (bradycardias).</p>
+    </blockedquote>
+    <blockedquote>
+      <p>Then it has to decide in which order it wants to present data to the reader (b, <b>text structuring</b>) and how to express these in individual sentence plans (c, <b>aggregation</b>; <b>lexicalisation</b>; <b>reference</b>).</p>
+    </blockedquote>
+    <blockedquote>
+      <p>Finally, the resulting sentences are generated (d, <b>linguistic realisation</b>).</p>
+    </blockedquote>
+  </span>
+  <img src="/assets/d2t/med.jpg" style="border:1px solid black;vertical-align:middle">
+</div> -->
+
+<!-- <div class="row">
+  <div class="column">
+    <img src="/assets/d2t/tasks.jpg" style="border:1px solid black;vertical-align:middle;margin:0px 85px" width="100%">
+  </div>
+  <div class="column">
+    The tasks that needs to be performed in order to generate the full textual summary from the input data can be described as follows:
+    <blockedquote>
+      <p>First the system has to decide what the important events are in the data (a, <b>content determination</b>), in this case, occurrences of low heart rate (bradycardias).</p>
+    </blockedquote>
+    <blockedquote>
+      <p>Then it has to decide in which order it wants to present data to the reader (b, <b>text structuring</b>) and how to express these in individual sentence plans (c, <b>aggregation</b>; <b>lexicalisation</b>; <b>reference</b>).</p>
+    </blockedquote>
+    <blockedquote>
+      <p>Finally, the resulting sentences are generated (d, <b>linguistic realisation</b>).</p>
+    </blockedquote>
+  </div>
+</div> -->
+
+<!-- | ![subtasks](/assets/d2t/tasks.jpg){:width="750px" style="display:block;margin-left:auto;margin-right:auto;"} |  -->
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/tasks.jpg" alt="subtasks" width="850px" style="display:block;margin-left:auto;margin-right:auto;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">The tasks that needs to be performed in order to generate the full textual summary from the input data can be described as follows: first the system has to decide what the important events are in the data (a, <strong>content determination</strong>), in this case, occurrences of low heart rate (bradycardias); then it has to decide in which order it wants to present data to the reader (b, <strong>text structuring</strong>) and how to express these in individual sentence plans (c, <strong>aggregation</strong>; <strong>lexicalisation</strong>; <strong>reference</strong>); finally, the resulting sentences are generated (d, <strong>linguistic realisation</strong>).</td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="text-align: center;"><b>Subtasks in D2T NLG <a href="https://www.jair.org/index.php/jair/article/download/11173/26378/">(source)</a></b></p>
+
+<p>The specification of these subtasks vary from domain to domain, but the basic idea remains the same.</p>
+
+<p>Let’s take another example, the <strong>NBA match summarisation</strong> (the D2T NLG figure shown above) for instance. Here also, the generation will happen in the following steps:</p>
+
+<ul>
+  <li>first, we need to decide what records from the input table will be dispalyed in the final text (or <strong><em>what to say?</em></strong>);</li>
+  <li>second, we’ll have to decide in what order those records will be displayed, which will also include the deciding on which records will have separate senetences and which ones will be included in the same sentence (or <strong><em>how to say?</em></strong>); and</li>
+  <li>finally, generating the text by combining all the decisions made in previous steps (or <strong>saying what’s decided</strong>).</li>
+</ul>
+
+<h2 id="public-datasets-and-evaluation-metrics">
+<a class="anchor" href="#public-datasets-and-evaluation-metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Public Datasets and Evaluation Metrics</h2>
+
+<p>Now that we know about the expectations in D2T NLG, let’s see some of the standard datasets available in public domain and evaluation metrics used to measure the performance of different methods on these datasets.</p>
+
+<p>To keep track of the <strong>state-of-the-art</strong> in this field, I would recommend to follow this article on <a href="https://nlpprogress.com/english/data_to_text_generation.html">NLP-progress</a> or this task category on <a href="https://paperswithcode.com/task/data-to-text-generation">Papers with Code</a>.</p>
+
+<h3 id="rotowire">
+<a class="anchor" href="#rotowire" aria-hidden="true"><span class="octicon octicon-link"></span></a>RotoWire</h3>
+<p>The <a href="https://github.com/harvardnlp/boxscore-data/blob/master/rotowire.tar.bz2">dataset</a> consists of articles summarizing NBA basketball games, paired with their corresponding box- and line-score tables. It is professionally written, medium length game summaries targeted at fantasy basketball fans. The writing is colloquial, but structured, and targets an audience primarily interested in game statistics. The picture used above for the example of D2T NLG is from this dataset only.
+<!-- <sup>[[2]](#myfootnote2)</sup>. --></p>
+
+<p>The performance is evaluated on two different automated metrics: first, <strong>BLEU score</strong>; and second, a family of <strong>Extractive Evaluations (EE)</strong>. EE contains three different submetrics evaluating three different aspects of the generation. Since EE metrics are comparatively new than others, I’ll briefly explain them here:</p>
+
+<ul>
+  <li>
+    <p><strong>Content Selection (CS)</strong>: precision (P%) and recall (R%) of unique relations extracted from generated text that are also extracted from golden text. This measures how well the generated document matches the gold document in terms of selecting which records to generate.</p>
+  </li>
+  <li>
+    <p><strong>Relation Generation (RG)</strong>: precision (P%) and number of unique relations (#) extracted from generated text that also appear in structured input provided. This measures how well the system is able to generate text containing factual (i.e., correct) records.</p>
+  </li>
+  <li>
+    <p><strong>Content Ordering (CO)</strong>: normalized Damerau-Levenshtein Distance (DLD%) between the sequences of records extracted from golden text and that extracted from generated text. This measures how well the system orders the records it chooses to discuss.</p>
+  </li>
+</ul>
+
+<p>I am not explaining other evaluation metrics here, I’ll try to do that in some later post.</p>
+
+<!-- | **Model**           | **BLEU** | **CS (P% & R%)** | **RG (P% & #)** | **CO (DLD%)** |  **Paper / Source** | **Code** |
+| ------------- | :-----: | :-----: | :-----: | :-----:| --- | --- |
+| **Rebuffel, Clément, et al. (2020)** <sup>[[4]](#myfootnote4)</sup> | 17.50 | 39.47 & 51.64 | 89.46 & 21.17 | 18.90 | [A Hierarchical Model for Data-to-Text Generation](https://link.springer.com/chapter/10.1007/978-3-030-45439-5_5) |[Official](https://github.com/KaijuML/data-to-text-hierarchical) |
+| **Puduppully et al. (2019)** <sup>[[3]](#myfootnote3)</sup> | 16.50 | 34.18 & 51.22 | 87.47 & 34.28 | 18.58 | [Data-to-text generation with content selection and planning](https://www.aaai.org/ojs/index.php/AAAI/article/view/4668) |[Official](https://github.com/ratishsp/data2text-plan-py) |
+| **Wiseman et al. (2017)** <sup>[[2]](#myfootnote2)</sup> | 14.49 | 22.17 & 27.16 | 71.82 & 12.82 | 8.68 | [Challenges in Data-to-Document Generation](https://www.aclweb.org/anthology/D17-1239.pdf) |[Official](https://github.com/harvardnlp/data2text) | -->
+
+<h3 id="webnlg">
+<a class="anchor" href="#webnlg" aria-hidden="true"><span class="octicon octicon-link"></span></a>WebNLG</h3>
+<p>The <a href="https://webnlg-challenge.loria.fr/">WebNLG challenge</a> consists in mapping data to text. The training data consists of Data/Text pairs where the data is a set of triples extracted from DBpedia and the text is a verbalisation of these triples. For example, given the three DBpedia triples (as shown in [a]), the aim is to generate a text (as shown in [b]):</p>
+
+<ul>
+  <li>
+    <p><strong>[a]</strong>. (John_E_Blaha birthDate 1942_08_26) (John_E_Blaha birthPlace San_Antonio) (John_E_Blaha occupation Fighter_pilot)</p>
+  </li>
+  <li>
+    <p><strong>[b]</strong>. John E Blaha, born in San Antonio on 1942-08-26, worked as a fighter pilot.</p>
+  </li>
+</ul>
+
+<p>The performance is evaluated on the basis of <strong>BLEU, METEOR and TER scores</strong>. The data from WebNLG Challenge 2017 can be downloaded <a href="https://gitlab.com/shimorina/webnlg-dataset">here</a>.</p>
+
+<!-- | **Model**           | **BLEU** | **METEOR** | **TER** |  **Paper / Source** | **Code** |
+| ------------- | :-----: | :-----: | :-----: | --- | --- |
+| **Kale, Mihir. (2020)** <sup>[[9]](#myfootnote9)</sup> | 57.1 | 0.44 |  | [Text-to-Text Pre-Training for Data-to-Text Tasks](https://arxiv.org/pdf/2005.10433v2.pdf) |  |
+| **Moryossef et al. (2019)** <sup>[[5]](#myfootnote5)</sup> | 47.4 | 0.391 | 0.631 | [Step-by-Step: Separating Planning from Realization in Neural Data-to-Text Generation](https://www.aclweb.org/anthology/N19-1236.pdf) | [Official](https://github.com/AmitMY/chimera) |
+| **Baseline** | 33.24 | 0.235436 | 0.613080 | [Baseline system provided during the challenge](https://webnlg-challenge.loria.fr/challenge_2017/#webnlg-baseline-system) |[Official](https://gitlab.com/webnlg/webnlg-baseline) | -->
+
+<!-- **P.S.**: The **test dataset** of WebNLG consists of **total 15 categories**, out of which 10 (**seen**) catgories are used for training while 5 (**unseen**) are not.  -->
+<!-- The results reported here are those obtained on overall test data, i.e., all 15 categories. -->
+
+<h3 id="meaning-representations">
+<a class="anchor" href="#meaning-representations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Meaning Representations</h3>
+
+<p>The dataset was first provided for the <a href="http://www.macs.hw.ac.uk/InteractionLab/E2E/">E2E Challenge</a> in 2017. It is a crowd-sourced data set of 50k instances in the restaurant domain.Each instance consist of a dialogue act-based meaning representations (MR) and up to 5 references in natural language (NL). For example:</p>
+
+<ul>
+  <li>
+    <p><strong>MR</strong>: name[The Eagle], eatType[coffee shop], food[French], priceRange[moderate], customerRating[3/5], area[riverside], kidsFriendly[yes], near[Burger King]</p>
+  </li>
+  <li>
+    <p><strong>NL</strong>: “The three star coffee shop, The Eagle, gives families a mid-priced dining experience featuring a variety of wines and cheeses. Find The Eagle near Burger King.”</p>
+  </li>
+</ul>
+
+<p>The performance is evaluated using <strong>BLEU, NIST, METEOR, ROUGE-L, CIDEr scores</strong>. The data from E2E Challenge 2017 can be downloaded <a href="https://github.com/tuetschek/e2e-dataset/releases/download/v1.0.0/e2e-dataset.zip">here</a>.</p>
+
+<!-- | **Model**           | **BLEU** | **NIST** | **METEOR** | **ROUGE-L** | **CIDEr** |  **Paper / Source** | **Code** |
+| ------------- | :-----: | :-----: |:-----: |:-----: | :-----: | --- | --- |
+| **Shen, Sheng, et al. (2019)** <sup>[[7]](#myfootnote6)</sup> | 68.60 | 8.73 | 45.25 | 70.82 | 2.37 | [Pragmatically Informative Text Generation](https://www.aclweb.org/anthology/N19-1410.pdf) |[Official](https://github.com/sIncerass/prag_generation) |
+| **Elder, Henry, et al. (2019)** <sup>[[8]](#myfootnote8)</sup> | 67.38 | 8.7277 | 45.72 | 71.52 | 2.2995 | [Designing a Symbolic Intermediate Representation for Neural Surface Realization](https://www.aclweb.org/anthology/W19-2308.pdf) | |
+| **Gehrmann, Sebastian, et al. (2018)** <sup>[[6]](#myfootnote7)</sup> | 66.2 | 8.60 | 45.7 | 70.4 | 2.34 | [End-to-End Content and Plan Selection for Data-to-Text Generation](https://www.aclweb.org/anthology/W18-6505.pdf) |[Official](https://github.com/sebastianGehrmann/diverse_ensembling) |
+| **Baseline** | 65.93 | 8.61 | 44.83 | 68.50 | 2.23 | [Baseline system provided during the challenge](http://www.macs.hw.ac.uk/InteractionLab/E2E/#baseline) |[Official](https://github.com/UFAL-DSG/tgen/tree/master/e2e-challenge) | -->
+
+<h2 id="further-steps">
+<a class="anchor" href="#further-steps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Steps</h2>
+<!-- - I would recommend looking at the **data-to-text section** of [Papers with Code](https://paperswithcode.com/task/data-to-text-generation). -->
+<ul>
+  <li>For a detailed review of the field, I would recommed reading this <a href="https://www.jair.org/index.php/jair/article/download/11173/26378/">survey paper</a>.</li>
+  <li>
+<a href="https://aclweb.org/aclwiki/Data_sets_for_NLG">Here</a> you can find a list of <strong>public datasets</strong> available for D2T NLG.</li>
+  <li>Have a look at the <strong>ACL’s Special Interest Group on Natural Language Generation</strong> - <a href="https://aclweb.org/aclwiki/SIGGEN">ACL SIGGEN</a>.</li>
+  <li>Would recommend to follow <a href="https://ehudreiter.com/blog-index/">Prof. Ehud Reiter’s Blog</a>, he writes a lot on the issues of NLG (alsow w/ ML/DL) research.</li>
+</ul>
+
+<!-- ## References
+<a name="myfootnote1">[1]</a> Albert Gatt and Emiel Krahmer. 2018. [Survey of the state of the art in natural language generation: core tasks, applications and evaluation](https://www.jair.org/index.php/jair/article/download/11173/26378/). J. Artif. Int. Res. 61, 1 (January 2018), 65–170.
+
+<a name="myfootnote2">[2]</a> Wiseman, Sam, Stuart M. Shieber, and Alexander M. Rush. "[Challenges in Data-to-Document Generation](https://www.aclweb.org/anthology/D17-1239.pdf)." Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing. 2017.
+
+<a name="myfootnote3">[3]</a> Puduppully, Ratish, Li Dong, and Mirella Lapata. "[Data-to-text generation with content selection and planning](https://www.aaai.org/ojs/index.php/AAAI/article/view/4668)." Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 33. 2019.
+
+<a name="myfootnote4">[4]</a> Rebuffel, Clément, et al. "[A Hierarchical Model for Data-to-Text Generation](https://link.springer.com/chapter/10.1007/978-3-030-45439-5_5)." European Conference on Information Retrieval. Springer, Cham, 2020.
+
+<a name="myfootnote5">[5]</a> Moryossef, Amit, Yoav Goldberg, and Ido Dagan. "[Step-by-Step: Separating Planning from Realization in Neural Data-to-Text Generation](https://www.aclweb.org/anthology/N19-1236.pdf)." Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers). 2019.
+
+<a name="myfootnote6">[6]</a> Gehrmann, Sebastian, et al. "[End-to-End Content and Plan Selection for Data-to-Text Generation](https://www.aclweb.org/anthology/W18-6505.pdf)." Proceedings of the 11th International Conference on Natural Language Generation. 2018.
+
+<a name="myfootnote7">[7]</a> Shen, Sheng, et al. "[Pragmatically Informative Text Generation](https://www.aclweb.org/anthology/N19-1410.pdf)." Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers). 2019.
+
+<a name="myfootnote8">[8]</a> Elder, Henry, et al. "[Designing a Symbolic Intermediate Representation for Neural Surface Realization](https://www.aclweb.org/anthology/W19-2308.pdf)." Proceedings of the Workshop on Methods for Optimizing and Evaluating Neural Language Generation. 2019.
+
+<a name="myfootnote9">[9]</a> Kale, Mihir. "[Text-to-Text Pre-Training for Data-to-Text Tasks](https://arxiv.org/pdf/2005.10433v2.pdf)" arXiv preprint arXiv:2005.10433 (2020).
+ -->
+
+<!-- <style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'long'};</script>
+Markdeep:<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script> -->
+
+  </div><a class="u-url" href="/nlp-blog/nlp/d2t/nlg/2020/06/22/Data-to-Text-Generation.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/nlp-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/nlp-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/nlp-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Some simple stuff about NLP.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/ashishu007" title="ashishu007"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/ashishu007_" title="ashishu007_"><svg class="svg-icon grey"><use xlink:href="/nlp-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
