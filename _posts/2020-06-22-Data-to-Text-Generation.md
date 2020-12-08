@@ -67,8 +67,8 @@ There are several real-world applications to automated text generation. Here are
 
 <table style="margin-left:auto;margin-right:auto;">
   <tr>
-    <td><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/med.jpg" width="300"></td>
-    <td><img src="https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/weather.gif" width="350"></td>
+    <td><img src="https://ashishu007.github.io/assets/d2t/med.jpg" width="300"></td>
+    <td><img src="https://ashishu007.github.io/assets/d2t/weather.gif" width="350"></td>
   </tr>
 </table>
 
@@ -84,7 +84,7 @@ Based on the input provided to the system, NLG can be broadly categorised into t
 ### T2T NLG
 As the name suggests, in **text-to-text generation**, our goal is to generate text from unstructured textual input. For example, machine translation, where we take a text document in one natural language as input and produce the same content in different natural language as output.
 
-![T2T NLG](https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/t2tnlg.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"}
+![T2T NLG](https://ashishu007.github.io/assets/d2t/t2tnlg.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"}
 <!-- <kbd> -->
 <!-- <img src="/assets/d2t/t2tnlg.jpg" style="border:1px solid black;margin-left:auto;margin-right:auto;" width="850"> -->
 <!-- </kbd> -->
@@ -93,7 +93,7 @@ As the name suggests, in **text-to-text generation**, our goal is to generate te
 ### D2T NLG
 For **data-to-text generation**, the input is presented in a structured format, i.e., tablular, graphical or JSON format. With this structured input, we generate a textual output summarising the input values. For example, summarising NBA match where, for given box- and line-scores as input we have to generate a textual summary of the match as the output.
 
-![D2T NLG](https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/d2tnlg.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"}
+![D2T NLG](https://ashishu007.github.io/assets/d2t/d2tnlg.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"}
 <!-- <kbd> -->
 <!-- <img src="/assets/d2t/d2tnlg.jpg" style="border:1px solid black;margin-left:auto;margin-right:auto;" width="850"> -->
 <!-- </kbd> -->
@@ -183,7 +183,7 @@ The tasks that needs to be performed in order to generate the full textual summa
 
 <!-- | ![subtasks](/assets/d2t/tasks.jpg){:width="750px" style="display:block;margin-left:auto;margin-right:auto;"} |  -->
 
-| ![subtasks](https://ashishu007.github.io/assets/ml-bp/iam1.png/assets/d2t/tasks.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"} |
+| ![subtasks](https://ashishu007.github.io/assets/d2t/tasks.jpg){:width="850px" style="display:block;margin-left:auto;margin-right:auto;"} |
 |:--:| 
 | The tasks that needs to be performed in order to generate the full textual summary from the input data can be described as follows: first the system has to decide what the important events are in the data (a, **content determination**), in this case, occurrences of low heart rate (bradycardias); then it has to decide in which order it wants to present data to the reader (b, **text structuring**) and how to express these in individual sentence plans (c, **aggregation**; **lexicalisation**; **reference**); finally, the resulting sentences are generated (d, **linguistic realisation**). |
 
