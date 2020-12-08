@@ -1,6 +1,7 @@
 ---
 toc: true
 layout: post
+comments: true
 description: Introduction to Data-to-Text Generation.
 categories: [nlp, d2t, nlg]
 title: Introduction to Data-to-Text Generation
