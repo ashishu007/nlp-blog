@@ -175,47 +175,7 @@ window.onload = wrap_img;
 
 <p>A little heads-up about the blog. This blog is <strong>not</strong> an in-depth analysis of DL methods applied to NLP tasks, instead, I have tried to provide a <strong>quick overview</strong> of the main development of DL methods for NLP. The goal of this post is to provide the reader with a direction for starting with DL in NLP. I’ll try to showcase the field’s evolution in a previous couple of years. Hopefully, by the end of this blog, if you are a newcomer to the field, you’ll at least have the understanding of technical terms of DL in NLP.</p>
 
-<p>So, without further ado, <strong><em>let’s start</em></strong>.
-&lt;!– 
-<strong>Table of Contents</strong></p>
-
-<ul>
-  <li><a href="#artificial-intelligence---looking-back">Artificial Intelligence - Looking Back</a></li>
-  <li><a href="#word-embeddings">Word Embeddings</a></li>
-  <li>
-<a href="#sequence-learning">Sequence Learning</a>
-    <ul>
-      <li><a href="#vanilla-seq2seq-model">Vanilla seq2seq Model</a></li>
-      <li><a href="#seq2seq-with-attention">seq2seq with Attention</a></li>
-    </ul>
-  </li>
-  <li>
-<a href="#learning-methods">Learning Methods</a>
-    <ul>
-      <li><a href="#recurrent-neural-networks">Recurrent Neural Networks</a></li>
-      <li><a href="#long-short-term-memory-networks">Long Short-Term Memory Networks</a></li>
-      <li><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li>
-      <li><a href="#transformers">Transformers</a></li>
-    </ul>
-  </li>
-  <li><a href="#language-models">Language Models</a></li>
-  <li>
-<a href="#transfer-learning">Transfer Learning</a>
-    <ul>
-      <li><a href="#embeddings-learned-from-language-models">Embeddings Learned from Language Models</a></li>
-      <li><a href="#universal-language-model-fine-tuning">Universal Language Model Fine-Tuning</a></li>
-      <li><a href="#generative-pre-training">Generative Pre-Training</a></li>
-      <li><a href="#bidirectional-encoder-representation-from-transformers">Bidirectional Encoder Representation from Transformers</a></li>
-    </ul>
-  </li>
-  <li><a href="#further-steps">Further Steps</a></li>
-  <li>
-    <p><a href="#acknowledgement">Acknowledgement</a></p>
-  </li>
-  <li><a href="#references">References</a></li>
-</ul>
-
-<p><small><i><a href="http://ecotrust-canada.github.io/markdown-toc/">Table of contents generated with markdown-toc</a></i></small> –&gt;</p>
+<p>So, without further ado, <strong><em>let’s start</em></strong>.</p>
 
 <h2 id="artificial-intelligence---looking-back">
 <a class="anchor" href="#artificial-intelligence---looking-back" aria-hidden="true"><span class="octicon octicon-link"></span></a>Artificial Intelligence - Looking Back</h2>
@@ -349,25 +309,6 @@ window.onload = wrap_img;
 
 <div style="text-align: center;"><b>An Encoder-Decoder seq2seq model <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/readings/cs224n-2019-notes06-NMT_seq2seq_attention.pdf">(source)</a></b></div>
 
-<!-- \begin{figure}
-     \centering
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{images/encoder.png}
-         \caption{Encoder}
-         \label{fig:encoder}
-     \end{subfigure}
-    %  \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{images/decoder.png}
-         \caption{Decoder}
-         \label{fig:decoder}
-     \end{subfigure}
-        \caption{Encoder-Decoder architecture using LSTM for seq2seq model}
-        \label{fig:enc_dec}
-\end{figure} -->
-
 <h3 id="seq2seq-with-attention">
 <a class="anchor" href="#seq2seq-with-attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>seq2seq with Attention</h3>
 
@@ -379,39 +320,19 @@ window.onload = wrap_img;
 
 <div style="text-align: center;">
 <a href="https://www.codecogs.com/eqnedit.php?latex=e%5E%7Bt%7D&amp;space;=&amp;space;%5Bs%5E%7BT%7D_%7Bt%7Dh_%7B1%7D,&amp;space;%5Ccdots,&amp;space;s%5E%7BT%7D_%7Bt%7Dh_%7Bn%7D%5D" target="_blank"><img src="https://latex.codecogs.com/gif.latex?e%5E%7Bt%7D&amp;space;=&amp;space;%5Bs%5E%7BT%7D_%7Bt%7Dh_%7B1%7D,&amp;space;%5Ccdots,&amp;space;s%5E%7BT%7D_%7Bt%7Dh_%7Bn%7D%5D" title="e^{t} = [s^{T}_{t}h_{1}, \cdots, s^{T}_{t}h_{n}]"></a>
-<!-- <span class="math"><b>e<sup>t</sup> = [s<sub>t</sub><sup>T</sup>h<sub>1</sub>, ..., s<sub>t</sub><sup>T</sup>h<sub>n</sub>]</b></span> -->
 </div>
-
-<!-- \begin{equation}
-    \label{eq:att_score}
-        e^{t} = [s^{T}_{t}h_{1}, \cdots, s^{T}_{t}h_{n}]
-\end{equation} -->
-
-<!-- e^{t} = [s^{T}_{t}h_{1}, \cdots, s^{T}_{t}h_{n}] -->
 
 <p>We take the softmax of these scores to get the attention distribution at timestep <strong>t</strong>.</p>
 
 <div style="text-align: center;">
 <a href="https://www.codecogs.com/eqnedit.php?latex=%5Calpha%5E%7Bt%7D&amp;space;=&amp;space;softmax(e%5E%7Bt%7D)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?%5Calpha%5E%7Bt%7D&amp;space;=&amp;space;softmax(e%5E%7Bt%7D)" title="\alpha^{t} = softmax(e^{t})"></a>
-<!-- <span class="math"><b>&prop;<sup>t</sup> = softmax(e<sup>t</sup>)</b></span> -->
 </div>
-
-<!-- \begin{equation}
-    \label{eq:att_dist}
-        \alpha^{t} = softmax(e^{t})
-\end{equation} -->
 
 <p>The attention output <span class="math"><b>a<sub>t</sub></b></span> is then calculated as the weighted sum of encoder hidden state using <span class="math"><b>∝<sup>t</sup></b></span>:</p>
 
 <div style="text-align: center;">
-<!-- <span class="math"><b>a<sub>t</sub> = &prop;<sup>t</sup><sub>i</sub>h<sub>i</sub></b></span> -->
 <a href="https://www.codecogs.com/eqnedit.php?latex=a_%7Bt%7D&amp;space;=&amp;space;%5Csum_%7Bi=1%7D%5E%7Bn%7D&amp;space;%5Calpha_%7Bi%7D%5E%7Bt%7Dh_%7Bi%7D" target="_blank"><img src="https://latex.codecogs.com/gif.latex?a_%7Bt%7D&amp;space;=&amp;space;%5Csum_%7Bi=1%7D%5E%7Bn%7D&amp;space;%5Calpha_%7Bi%7D%5E%7Bt%7Dh_%7Bi%7D" title="a_{t} = \sum_{i=1}^{n} \alpha_{i}^{t}h_{i}"></a>
 </div>
-
-<!-- \begin{equation}
-    \label{eq:att_out}
-        a_{t} = \sum_{i=1}^{n} \alpha_{i}^{t}h_{i}
-\end{equation} -->
 
 <p>Finally, we concatenate the attention output <span class="math"><b>a<sup>t</sup></b></span> with decoder hidden state <span class="math"><b>s<sup>t</sup></b></span> and proceed to calculate the negative log loss same as the non-attention decoder model.</p>
 
@@ -455,13 +376,6 @@ window.onload = wrap_img;
 <span class="math"><b>y<sub>t</sub> = σ<sub>y</sub> ( W<sub>y</sub>h<sub>t</sub> + b<sub>y</sub> )</b></span>
 </div>
 
-<!-- \begin{align}\label{eq:rnn}
-    \begin{gathered}
-        h_{t} = \sigma_{h}(W_{e}x_{t} + W_{h}h_{t-1} + b_{h}) \\
-        y_{t} = \sigma_{y}(W_{y}h_{t} + b_{y})
-    \end{gathered}
-\end{align} -->
-
 <p>Here <span class="math"><b>σ<sub>y</sub></b></span> and <span class="math"><b>σ<sub>h</sub></b></span> are the activation functions. <span class="math"><b>W<sub>h</sub></b></span> is the weight matrix to apply transformation on previous hidden state <span class="math"><b>h<sub>t-1</sub>, W<sub>e</sub></b></span> is the weight matrix to apply transformation on the input <span class="math"><b>x<sub>t</sub></b></span> received over time <strong>t</strong>. Combining these with the bias <span class="math"><b>b<sub>h</sub></b></span> yields hidden state <span class="math"><b>h<sub>t</sub></b></span> for time <strong>t</strong>. Applying activation on the <span class="math"><b>h<sub>t</sub></b></span> with <span class="math"><b>W<sub>y</sub></b></span> gives the output <span class="math"><b>y<sub>t</sub></b></span> for every time-step <strong>t</strong>.</p>
 
 <ul>
@@ -476,17 +390,6 @@ window.onload = wrap_img;
 <h3 id="long-short-term-memory-networks">
 <a class="anchor" href="#long-short-term-memory-networks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Long Short-Term Memory Networks</h3>
 <p>Although, in theory the RNNs are designed to handle the sequence input but in practice they lack in storing the long term dependencies because of the problem of exploding and vanishing gradients <a href="#myfootnote5">[5]</a>. Long Short-Term Memory Networks <a href="#myfootnote6">[6]</a> are the advanced version of RNNs with a slight modification of being capable of deciding what to <strong><em>‘remember’</em></strong> and what to <strong><em>forget</em></strong> from the input sequence with the help of a series of gates. LSTMs have a number of gates: an output gate <span class="math"><b>o<sub>t</sub></b></span>; an input gate <span class="math"><b>i<sub>t</sub></b></span>; a forget gate <span class="math"><b>f<sub>t</sub></b></span> - all of which are the functions of previous hidden state <span class="math"><b>h<sub>t</sub></b></span> and current input <span class="math"><b>x<sub>t</sub></b></span>. These gates interact with the previous cell state <span class="math"><b>c<sub>t-1</sub></b></span>, the current input <span class="math"><b>x<sub>t</sub></b></span>, and the current cell state <span class="math"><b>c<sub>t</sub></b></span> and enable the model to selectively retain or information from the sequence. The full version of LSTM is given in the equation below.</p>
-
-<!-- \begin{equation}\label{eq:lstm}
-    \begin{gathered}    
-        f_{t} = \sigma_{g} (W_{f}x_{t} + U_{f}h_{t-1} + b_{f}) \\
-        i_{t} = \sigma_{g} (W_{i}x_{t} + U_{i}h_{t-1} + b_{i}) \\
-        o_{t} = \sigma_{g} (W_{o}x_{t} + U_{o}h_{t-1} + b_{o}) \\
-        \Tilde{c_{t}} = \sigma_{c} (W_{c}x_{t} + U_{c}h_{t-1} + b_c)\\
-        c_{t} = f_{t} \circ c_{t-1} + i_{t} \circ \Tilde{c_{t}}\\
-        h_{t} = o_{t} \circ \sigma_{h}(c_{t})
-    \end{gathered}
-\end{equation} -->
 
 <div style="text-align: center;">
 <span class="math"><b>f<sub>t</sub> = σ<sub>g</sub> ( W<sub>f</sub>x<sub>t</sub> + U<sub>f</sub>h<sub>t-1</sub> + b<sub>f</sub> )</b></span>
@@ -517,13 +420,6 @@ window.onload = wrap_img;
 <p><img src="https://ashishu007.github.io/assets/nlp-dl/lstm.png" alt="LSTM" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
 <div style="text-align: center;"><b>A simple Long-Short Term Memory Network  <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">(source)</a></b></div>
 
-<!-- \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{images/lstm.png}
-    \caption{LSTM}
-    \label{fig:lstm}
-\end{figure} -->
-
 <p>LSTM layers can be stacked on each other to form multi-layer LSTM architecture. One of the most popular LSTM architecture is Bidirectional LSTM (BiLSTM), where two separate LSTMs are used to capture the sequential information in both forward and backwards directions. Gated Recurrent Units (GRUs) <a href="#myfootnote7">[7]</a> are another advanced version of RNN which are common for handling the vanishing gradient problem, but I am not discussing them here as they are almost similar to LSTM except with no cell-state.</p>
 
 <ul>
@@ -539,33 +435,17 @@ window.onload = wrap_img;
 <a class="anchor" href="#convolutional-neural-networks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Convolutional Neural Networks</h3>
 <p>Convolutional Neural Networks (CNNs) <a href="#myfootnote8">[8]</a> have established themselves as state-of-the-art in various computer vision tasks. For the last couple of years, CNNs have been the benchmark for almost every vision task. Inspired from the popularity of CNN in vision, Yoon Kim proposed a CNN architecture for sentence classification which outperformed then benchmarks on various text classification datasets <a href="#myfootnote9">[9]</a>.</p>
 
-<!-- \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{images/cnn_text.png}
-    \caption{CNN for sentence classification}
-    \label{fig:cnn}
-\end{figure} -->
-
-<!-- CNNs are capable of learning vectors for all possible sub-phrases in a sentence, not just grammatically correct one as done by RNNs.  -->
 <p>A CNN takes an input sentence of <strong>n</strong> words, where each word is represented using a vector of dimension <strong>d</strong>. The input <span class="math"><b>X<sub>1:n</sub></b></span> will be a <strong>2D</strong> matrix of shape <span class="math"><b>n × d</b></span>, where <span class="math"><b>x<sub>i</sub> ∈ ℝ <sup>d</sup> </b></span>. Input <span class="math"><b>X<sub>1:n</sub></b></span> can be represented as:</p>
 
 <div style="text-align: center;">
 <span class="math"><b>X<sub>1:n</sub> = x<sub>1</sub> ⊕, ..., ⊕ x<sub>n</sub></b></span>
 </div>
 
-<!-- \begin{equation}
-    \label{eq:cnn_input}
-    X_{1:n} = x_{1} \oplus x_{2} \oplus \cdots \oplus x_{n}
-\end{equation} -->
-
 <p>where <span class="math"><b>⊕</b></span> is the concatenation operator. On the input layer, convolution filter <span class="math"><b>W ∈ ℝ<sup>hd</sup></b></span> is applied over window of <strong>h</strong> words to generate a new feature. So, a feature <span class="math"><b>c<sub>i</sub></b></span> is generated from the word window <span class="math"><b>x<sub>i:i+h-1</sub></b></span> with the following operation:</p>
 
 <div style="text-align: center;">
 <span class="math"><b>x<sub>i</sub> = σ(Wx<sub>i:i+h-1</sub> + b)</b></span>
 </div>
-<!-- \begin{equation}
-    c_{i} = \sigma (Wx_{i:i+h-1} + b)
-\end{equation} -->
 
 <p>where <strong>W</strong> is the weight matrix for the connections, <span class="math"><b>σ</b></span> is the <strong>activation function</strong> and <span class="math"><b>b ∈ ℝ</b></span> is the bias. Now, this filter is applied to each possible window of words giving an feature map <span class="math"><b>C ∈ ℝ<sup>n-h+1</sup></b></span>.</p>
 
@@ -573,19 +453,11 @@ window.onload = wrap_img;
 <span class="math"><b>C = [c<sub>1</sub>, c<sub>2</sub>, ..., c<sub>n-h+1</sub>]</b></span>
 </div>
 
-<!-- \begin{equation}
-    C = [c_{1}, c_{2}, \cdots, c_{n-h+1}]
-\end{equation} -->
-
 <p>The entries in feature map <strong>C</strong> are sharing the parameter <strong>W</strong>, where each <span class="math"><b>c<sub>i</sub> ∈ C</b></span> is a result of calculation on small segment of the input. Then a <strong>max-pooling</strong> operation is applied on these feature maps to capture the most important part.</p>
 
 <div style="text-align: center;">
 <span class="math"><b>Ĉ = max(C)</b></span>
 </div>
-
-<!-- \begin{equation}
-    \Tilde{C} = max(C)
-\end{equation} -->
 
 <p>This parameter sharing helps the model to incorporate an inductive bias into the model, helping to become learn the location invariant local features. There are <strong>k</strong> number of filters applied to the input with different window sizes which are then concatenated to form a vector <span class="math"><b>K ∈ ℝ<sup>k</sup></b></span>. Which is then fed to the next hidden layer or output layer.</p>
 
@@ -638,15 +510,6 @@ window.onload = wrap_img;
 
 <p>In general terms, for a given sequence of input <span class="math"><b>(x<sub>1</sub>, x<sub>2</sub>, …, x<sub>t</sub>)</b></span> the probability distribution of next term <span><b>(x<sub>t+1</sub>)</b></span> is computed from a vocabulary <strong>V</strong> of <strong>k</strong> words <span><b>(V = (w<sub>1</sub>, w<sub>1</sub>, …, w<sub>k</sub>))</b></span> as given below:</p>
 
-<!-- $(x_{1}, x_{2}, \cdots, x_{t})$,  -->
-<!-- $x_{t+1}$ -->
-<!-- ($V = (w_{1}, w_{2}, \cdots, w_{k})$) -->
-
-<!-- \begin{equation}
-    \label{eq:lm_dist}
-        P(x_{t+1}|x_{1}, \cdots, x_{t})
-\end{equation} -->
-
 <div style="text-align: center;">
 <span class="math"><b>P(x<sub>t+1</sub>|x<sub>1</sub>, ..., x<sub>t</sub>)</b></span>
 </div>
@@ -657,29 +520,13 @@ window.onload = wrap_img;
 <span class="math"><b>P(x<sub>t+1</sub>|x<sub>1</sub>, ..., x<sub>t</sub>) = P(x<sub>t+1</sub>, x<sub>t</sub>, ..., x<sub>t-n+2</sub>) ⁄ P(x<sub>t</sub>, ..., x<sub>t-n+2</sub>)</b></span>
 </div>
 
-<!-- \begin{equation}
-    \label{eq:lm_ngram}
-        P(x_{t+1}|x_{1}, \cdots, x_{t}) = 
-            \frac {P(x_{t+1}, x_{t}, \cdots, x_{t-n+2})} {P(x_{t}, \cdots, x_{t-n+2})}
-\end{equation} -->
-
 <p>or in simpler terms:</p>
 
 <div style="text-align: center;">
 <span class="math"><b>P(w<sub>3</sub>|w<sub>1</sub>, w<sub>2</sub>) = P(w<sub>1</sub>, w<sub>2</sub>, w<sub>3</sub>) ⁄ P(w<sub>1</sub>, w<sub>2</sub>)</b></span>
 </div>
 
-<!-- \begin{equation}
-    \label{eq:lm_count_ngram}
-        P(w_{3}|w_{1},w_{2}) = \frac{count(w_{1}, w_{2}, w_{3})}{count(w_{1}, w_{2})}
-\end{equation} -->
-
 <p>This statistical approach has mainly two problems. First, sparsity - consider the above equation, what if <span class="math"><b>w<sub>1</sub>, w<sub>2</sub>, w<sub>3</sub></b></span> never occurred together, the probability of <span class="math"><b>w<sub>3</sub></b></span> will be <strong>0</strong>. Second, storage - as we increase the value of <strong>n</strong>, the count of all <strong>n-grams</strong> we see in the corpus increases as well and so does the need of memory to store them.</p>
-
-<!-- $w_{1}$, $w_{2}$ and $w_{3}$  -->
-
-<!-- $w_{3}$  -->
-<!-- Also, if <span class="math"><b>w<sub>1</sub> and w<sub>2</sub></b></span> $w_{1}$ and $w_{2}$ then there's no way to calculate the probability of $w_{3}$.  -->
 
 <p>The neural language models using RNNs and Transformers are capable of modelling all the words in a sentence without needing a window to predict the next word at each timestep. You can think of a simple RNN for neural LM, where the RNN takes input tokens one at a time and by processing them generates the hidden state of each timestep. At the final time step, the output of that RNN block will be taken as the softmax against the whole vocabulary, and the word with the highest probability will be the prediction of LM as next word in the sequence.</p>
 
@@ -692,20 +539,15 @@ window.onload = wrap_img;
   </li>
 </ul>
 
-<!-- \subsubsection{Recurrent Neural Networks} \label{sec:rnn} -->
-
 <h2 id="transfer-learning">
 <a class="anchor" href="#transfer-learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transfer Learning</h2>
 
-<p>NLP cracked transfer learning by applying a simple rule: first, learn the general nuances of text (grammar-rules or fill in the blanks) from a huge corpus of text using a language model; and then transfer that learning by fine-tuning the language model on a task-specific dataset. In the following sections, we’ll discuss some of the advancements in using different versions of LMs for transfer learning. 
-<!-- This was the ***The Imagenet Moment of NLP***. --></p>
+<p>NLP cracked transfer learning by applying a simple rule: first, learn the general nuances of text (grammar-rules or fill in the blanks) from a huge corpus of text using a language model; and then transfer that learning by fine-tuning the language model on a task-specific dataset. In the following sections, we’ll discuss some of the advancements in using different versions of LMs for transfer learning.</p>
 
 <h3 id="embeddings-learned-from-language-models">
 <a class="anchor" href="#embeddings-learned-from-language-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Embeddings Learned from Language Models</h3>
 
 <p>As discussed in the <a href="#word-embeddings">above section</a>, the word embeddings generated by algorithms like word2vec and GloVe lack the contextual awareness and fail to differentiate a word with different senses. A new version of words embeddings, known as, <strong>contextual word embeddings</strong> are capable of differentiating a word’s sense based on its context. These new models use a Language Model (LM) to generate the contextualised representation of words in a sentence. These modified embeddings generated from the LMs can be used as the input to another neural network for some downstream tasks.</p>
-
-<!-- #### Embeddings Learned from Language Models -->
 
 <p><strong>ELMo</strong> <a href="#myfootnote11">[11]</a> is one such embedding algorithm that uses a <strong>bidirectional language model</strong> to capture the context of a word in a sentence from both sides (left to right and vice-versa). ELMo uses a <strong>character-level CNN</strong> to convert raw text into a word vector which is then fed into a bidirectional language model. The output of this BiLM is then sent to the next layer of BiLM to form a set of intermediate word vectors. The final output of ELMo is the weighted sum of raw vectors and the intermediate vectors formed from two layers of the BiLMs. The two language models used here are based on LSTM architectures. An illustration of ELMo is shown in the figure below:</p>
 
@@ -759,13 +601,6 @@ window.onload = wrap_img;
 <p><img src="https://ashishu007.github.io/assets/nlp-dl/g.png" alt="GPT" width="500px" style="display:block;margin-left:auto;margin-right:auto;"></p>
 <div style="text-align: center;"><b>GPT Model <a href="https://lilianweng.github.io/lil-log/2019/01/31/generalized-language-models.html#openai-gpt">(source)</a></b></div>
 
-<!-- \begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/GPT.png}
-    \caption{GPT architecture.}
-    \label{fig:gpt}
-\end{figure} -->
-
 <ul>
   <li>
 <strong>Other Resources</strong>
@@ -795,21 +630,6 @@ window.onload = wrap_img;
 <div style="text-align: center;"><b>BERT, GPT and ELMo <a href="https://arxiv.org/pdf/1810.04805.pdf">(source)</a></b></div>
 
 <p>We can see, BERT uses the bi-directional transformer for processing the sequence, while GPT uses a uni-directional transformer. On the other hand, ELMo uses bi-directional LSTM to capture the bi-directional context while processing the input.</p>
-
-<!-- \begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/bert1.png}
-    \caption{BERT \cite{devlin2018bert}}
-    \label{fig:bert1}
-\end{figure}
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\textwidth]{images/bert2.png}
-%     \caption{BERT, GPT and ELMo \cite{devlin2018bert}}
-%     \label{fig:bert2}
-% \end{figure}
- -->
 
 <ul>
   <li>
