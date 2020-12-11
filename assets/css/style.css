@@ -480,7 +480,7 @@ p code { font-size: 19px; }
 
 /*-----------------------------------*/
 /*----- ADD YOUR STYLES BELOW -------*/
-html, body, input, textarea, select, button { color: rgba(255, 255, 255, 0.87) !important; background-color: #121212 !important; }
+html, body, input, textarea, select, button { color: rgba(255, 255, 255, 0.87) !important; background-color: #555555 !important; }
 
 a { color: #4bbaff !important; }
 
@@ -488,11 +488,11 @@ a:hover { color: rgba(255, 255, 255, 0.87) !important; }
 
 .site-title, .site-title:visited, .site-nav, .page-link { color: rgba(255, 255, 255, 0.87) !important; }
 
-.site-nav { background-color: #121212; border-color: #333333; }
+.site-nav { background-color: #555555; border-color: #6d6d6d; }
 
-* { scrollbar-color: #121212 #333333; }
+* { scrollbar-color: #555555 #6d6d6d; }
 
-pre, code { border-color: #333333; background-color: #1e1e1e; }
+pre, code { border-color: #6d6d6d; background-color: #5e5e5e; }
 
 .page-description { color: rgba(255, 255, 255, 0.69); }
 
@@ -500,15 +500,15 @@ pre, code { border-color: #333333; background-color: #1e1e1e; }
 
 .post-content p, .post-content li { color: rgba(255, 255, 255, 0.69); }
 
-.btn { background-color: #1e1e1e !important; color: rgba(255, 255, 255, 0.87) !important; border-color: #333333 !important; }
+.btn { background-color: #5e5e5e !important; color: rgba(255, 255, 255, 0.87) !important; border-color: #6d6d6d !important; }
 
-.btn:hover { background-color: #121212 !important; }
+.btn:hover { background-color: #555555 !important; }
 
-table th { background-color: #1e1e1e; border-color: #333333; color: rgba(255, 255, 255, 0.87); }
+table th { background-color: #5e5e5e; border-color: #6d6d6d; color: rgba(255, 255, 255, 0.87); }
 
-table td { background-color: #121212; border-color: #333333; color: rgba(255, 255, 255, 0.69); }
+table td { background-color: #555555; border-color: #6d6d6d; color: rgba(255, 255, 255, 0.69); }
 
-.flash { color: #121212 !important; filter: brightness(80%); }
+.flash { color: #555555 !important; filter: brightness(80%); }
 
 canvas { filter: invert(100%); }
 
